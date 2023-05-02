@@ -7,14 +7,15 @@ class Caja:
         self.dx = dx
         self.dy = dy
         self.dz = dz
-        self.rot = []
         # self.seq = seq
 
         #temp
         self.posx = posx
         self.posy = posy
         self.posz = posz
+        self.rot = []
         Caja.num_cajas_act += 1
+        
     
     @property
     def posx2(self):
@@ -26,24 +27,28 @@ class Caja:
     def posz2(self):
         return self.posz + self.dz
 
-    def agregar_rotaciones(self):
+    def agregar_rotaciones(self,numero=1):
         # self.rot=rot
         
         dx, dy, dz = self.dx, self.dy, self.dz
         #   rot=='y':
             # self.posx=self.posx+self.dx-self.dz
-        self.rot.append(caja_rot(self.num,dz,dy,dx,self.posx,self.posy,self.posz,'y'))
-
-        #  rot=='x':
-        self.rot.append(caja_rot(self.num,dx,dz,dy,self.posx,self.posy,self.posz,'x'))
-        #  rot=='z':
-        self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'z'))
-        #  rot=='yz':
-        self.rot.append(caja_rot(self.num,dy,dz,dx,self.posx,self.posy,self.posz,'yz'))
-        #  rot=='xz':
-        self.rot.append(caja_rot(self.num,dz,dx,dy,self.posx,self.posy,self.posz,'xz'))
-        #  original:
-        self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
+        if numero==0:
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
+        else:
+            #  original:
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
+            #  rot=='y':
+            self.rot.append(caja_rot(self.num,dz,dy,dx,self.posx,self.posy,self.posz,'y'))
+            #  rot=='x':
+            self.rot.append(caja_rot(self.num,dx,dz,dy,self.posx,self.posy,self.posz,'x'))
+            #  rot=='z':
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'z'))
+            #  rot=='yz':
+            self.rot.append(caja_rot(self.num,dy,dz,dx,self.posx,self.posy,self.posz,'yz'))
+            #  rot=='xz':
+            self.rot.append(caja_rot(self.num,dz,dx,dy,self.posx,self.posy,self.posz,'xz'))
+            
         
     def print_rotaciones(self):
         for i in self.rot:
