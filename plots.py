@@ -36,7 +36,7 @@ def plotear2D(elem,largo,ancho):
 # def cc(arg):
 #     return mcolors.to_rgba(arg, alpha=0.6)
 
-def plotear3D(elem,largo,ancho,alto,multicolor=False):
+def plotear3D(elem,largo,ancho,alto,multicolor=False,ejes_iguales=False):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -73,15 +73,16 @@ def plotear3D(elem,largo,ancho,alto,multicolor=False):
     # ax.scatter(x,y,z)
     #'#69b422'
 
+    if ejes_iguales==False:
+        ax.set_xlim(0,largo)
+        ax.set_ylim(0,ancho)
+        ax.set_zlim(0,alto)
+    else:
+        ax.set_xlim(0,max(largo,alto,ancho))
+        ax.set_ylim(0,max(largo,alto,ancho))
+        ax.set_zlim(0,max(largo,alto,ancho))
+        # ax.axis('equal')
     
-    ax.set_xlim(0,largo)
-    ax.set_ylim(0,ancho)
-    ax.set_zlim(0,alto)
-    # ax.set_xlim(0,max(largo,alto,ancho))
-    # ax.set_ylim(0,max(largo,alto,ancho))
-    # ax.set_zlim(0,max(largo,alto,ancho))
-    
-    # ax.axis('equal')
     plt.show()
 
 

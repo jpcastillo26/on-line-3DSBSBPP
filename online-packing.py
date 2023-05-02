@@ -10,7 +10,8 @@ cajas=[]
 # contenedores[cont]espacios=[]
 contenedores=[Contenedor(0)]
 temp=[]
-
+unir=True
+expandir=True
 
 def cargarArchivo(file_name):
 
@@ -57,7 +58,7 @@ def unir_esp(cont=0):
     nuevos_esp=[]
     
     seguir_uniendo=True
-    while seguir_uniendo==True:
+    while unir and seguir_uniendo==True:
         seguir_uniendo=False
         i=0
         while i < len(contenedores[cont].espacios):
@@ -71,7 +72,7 @@ def unir_esp(cont=0):
             
                 if i != j and ej.z1==ei.z1 and ej.z2==ei.z2:
                     # Unir contenedores[cont].espacios con X iguales y Y diferentes
-                    if ej.x1==ei.x1 and ej.x2==ei.x2:
+                    if ej.x1==ei.x1 and ej.x2==ei.x2 and unir:
                         if not (ej.y2<ei.y1 or ej.y1>ei.y2):
                             print('Match',ej,ei)
                             del contenedores[cont].espacios[j]
@@ -80,7 +81,7 @@ def unir_esp(cont=0):
                             resp, seguir_uniendo=True,True
 
                     # Unir contenedores[cont].espacios con Y iguales y X diferentes
-                    elif ej.y1==ei.y1 and ej.y2==ei.y2:
+                    elif ej.y1==ei.y1 and ej.y2==ei.y2 and unir:
                         #TODO pueden estar invertidos, hacer mas general para poder eliminar el nuevo loop con seguir_uniendo
                         if not (ej.x2<ei.x1 or ej.x1>ei.x2):
                             print('Match',ej,ei)
@@ -90,7 +91,7 @@ def unir_esp(cont=0):
                             resp, seguir_uniendo=True,True
 
                     # expandir ej con ei
-                    elif ei.x1 <= ej.x1 and ei.x2 >= ej.x2:
+                    elif ei.x1 <= ej.x1 and ei.x2 >= ej.x2 and expandir:
                         if not (ei.y1 > ej.y2 or ei.y2 < ej.y1):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
@@ -99,7 +100,7 @@ def unir_esp(cont=0):
                                 contenedores[cont].espacios[j].y1=min_y
                                 contenedores[cont].espacios[j].y2=max_y
 
-                    elif ei.y1 <= ej.y1 and ei.y2 >= ej.y2:
+                    elif ei.y1 <= ej.y1 and ei.y2 >= ej.y2 and expandir:
                         if not (ei.x1 > ej.x2 or ei.x2 < ej.x1):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
@@ -109,7 +110,7 @@ def unir_esp(cont=0):
                                 contenedores[cont].espacios[j].x2=max_x
 
                     # expandir ei con ej
-                    elif ei.x1 >= ej.x1 and ei.x2 <= ej.x2:
+                    elif ei.x1 >= ej.x1 and ei.x2 <= ej.x2 and expandir:
                         if not (ei.y1 > ej.y2 or ei.y2 < ej.y1):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
@@ -118,7 +119,7 @@ def unir_esp(cont=0):
                                 contenedores[cont].espacios[i].y1=min_y
                                 contenedores[cont].espacios[i].y2=max_y
 
-                    elif ei.y1 >= ej.y1 and ei.y2 <= ej.y2:
+                    elif ei.y1 >= ej.y1 and ei.y2 <= ej.y2 and expandir:
                         if not (ei.x1 > ej.x2 or ei.x2 < ej.x1):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
@@ -176,59 +177,52 @@ def caja_cabe_en_esp(caja_sel,esp):
 # # print(caja.seq)
 # print('dimensiones contenedor:' + str(Espmax.dim0))
 
-def ponerCaja(caja_sel,x,y,z,rot='zz',cont=0):
+def ponerCaja(caja_sel,x,y,z,cont=0):
     global contenedores
     global temp
     # print(rot)
     #TODO checkear si ya hay una caja ahi o solo poner dentro del espacio
     #TODO checkear si la caja entra en los limites del contenedor o del espacio
 
-    # caja_sel.posx, caja_sel.posy, caja_sel.posz = x, y, z
-    caja_sel.actualizar_pos(x,y,z)
-
     # TODO rotar caja
     # if rot != None:
     #     rotar_caja(caja_sel,rot)
-
     
 
+    # caja_sel.posx, caja_sel.posy, caja_sel.posz = x, y, z
+    cajas[caja_sel.num].actualizar_pos(x,y,z)
+
     # TODO buscar en caja_rot y retornarla, es el nuevo indice
-    if rot=='zz':r=0
-    elif rot=='y':r=1
-    elif rot=='x':r=2
-    elif rot=='z':r=3
-    elif rot=='yz':r=4
-    elif rot=='xz':r=5
-    caja_rotada=caja_sel.rot[r]
-    contenedores[cont].cajas.append(caja_rotada)
-    print('Poniendo caja',caja_rotada)
+    
+    contenedores[cont].cajas.append(caja_sel)
+    print('Poniendo caja',caja_sel)
     for i in range(0,len(contenedores[cont].espacios)):
         esp=contenedores[cont].espacios[i]
         # print(esp)
 
-        if caja_espacio_inter(caja_rotada,esp) == True:
-            if caja_rotada.posx2 > esp.x1 and caja_rotada.posx2 < esp.x2: #refinar
-                nuevo = Espmax(caja_rotada.posx2,esp.x2,esp.y1,esp.y2,esp.z1,esp.z2)
+        if caja_espacio_inter(caja_sel,esp) == True:
+            if caja_sel.posx2 > esp.x1 and caja_sel.posx2 < esp.x2: #refinar
+                nuevo = Espmax(caja_sel.posx2,esp.x2,esp.y1,esp.y2,esp.z1,esp.z2)
                 temp.append(nuevo)
 
             #puede fallar si la caja ocupa toda una dimension
-            if caja_rotada.posy2 > esp.y1 and caja_rotada.posy2 < esp.y2: #refinar
-                nuevo= Espmax(esp.x1,esp.x2,caja_rotada.posy2,esp.y2,esp.z1,esp.z2)
+            if caja_sel.posy2 > esp.y1 and caja_sel.posy2 < esp.y2: #refinar
+                nuevo= Espmax(esp.x1,esp.x2,caja_sel.posy2,esp.y2,esp.z1,esp.z2)
                 temp.append(nuevo)
             
-            if caja_rotada.posx < esp.x2 and caja_rotada.posx > esp.x1 and caja_rotada.posx != 0: #refinar
-                nuevo = Espmax(esp.x1,caja_rotada.posx,esp.y1,esp.y2,esp.z1,esp.z2)
+            if caja_sel.posx < esp.x2 and caja_sel.posx > esp.x1 and caja_sel.posx != 0: #refinar
+                nuevo = Espmax(esp.x1,caja_sel.posx,esp.y1,esp.y2,esp.z1,esp.z2)
                 temp.append(nuevo)
 
-            if caja_rotada.posy < esp.y2 and caja_rotada.posy > esp.y1 and caja_rotada.posy != 0: #refinar
-                nuevo= Espmax(esp.x1,esp.x2,esp.y1,caja_rotada.posy,esp.z1,esp.z2)
+            if caja_sel.posy < esp.y2 and caja_sel.posy > esp.y1 and caja_sel.posy != 0: #refinar
+                nuevo= Espmax(esp.x1,esp.x2,esp.y1,caja_sel.posy,esp.z1,esp.z2)
                 temp.append(nuevo)
 
         else:
             temp.append(esp)
     #espacio encima de la caja
-    if caja_rotada.posz2 != esp.z2:
-        esp_encima= Espmax(caja_rotada.posx,caja_rotada.posx2,caja_rotada.posy,caja_rotada.posy2,caja_rotada.posz2,esp.z2)
+    if caja_sel.posz2 != esp.z2:
+        esp_encima= Espmax(caja_sel.posx,caja_sel.posx2,caja_sel.posy,caja_sel.posy2,caja_sel.posz2,esp.z2)
         temp.append(esp_encima)
     contenedores[cont].espacios=temp
     temp=[]
@@ -241,13 +235,11 @@ def first_corner(esp):
         # esp=contenedores[cont].espacios[i]
         
     fc=esp.esquinas[0]
-    fc_num=0
     fc_dist=fc.distX+fc.distY
     for j in range(0,4):
         if (esp.esquinas[j].distX + esp.esquinas[j].distY) < fc_dist:
             fc=esp.esquinas[j]
-            fc_num=j
-            fc_dist=esp.esquinas[j].distX
+            fc_dist=esp.esquinas[j].distX+esp.esquinas[j].distY
 
     # closest_corner.append([i,fc_num,fc_dist])
         
@@ -273,7 +265,7 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-def viz_paso_a_paso(vf=True,cont=0,multicolor=False):
+def viz_paso_a_paso(vf=True,cont=0,multicolor=False,ejes_iguales=False):
     global contenedores
     
     demo=[]
@@ -284,14 +276,17 @@ def viz_paso_a_paso(vf=True,cont=0,multicolor=False):
         for obj in contenedores[cont].espacios:
             demo.pop()
             demo.append(obj)
-            plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor)
+            plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
     else:
-        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor)
+        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
-def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False):
-
+def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
+    global unir
+    global expandir
     cargarArchivo(instancia)
-
+    unir=unir_esp
+    expandir=expandir_esp
+    
 
     for indice in range(0,num_cajas):
         i=Caja.seq[indice]
@@ -300,27 +295,52 @@ def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False):
         #revisar si cabe en el espacio
         #TODO diccionario con cada espacio y su equina mas cercana a los bordes (combinaciones)
         #TODO retornar lista ordenada con los contenedores[cont].espacios con esquinas mas cercanas
-
-        lista_ord=bestFit(cajas[i])
+        
         cajas[i].agregar_rotaciones()
         cajas[i].print_rotaciones()
+
+        #TODO completar comb
+        #TODO tener en cuenta el orden
+        if not (rot_x or rot_y or rot_z):r=0
+        elif rot_y and not (rot_x or rot_z):r=1
+        elif rot_x and not (rot_y or rot_z):r=2
+        elif rot_z and not (rot_x or rot_y):r=3
+        elif (rot_y and rot_z and not rot_x) or (rot_x and rot_y and not rot_z):r=4
+        elif rot_x and rot_z and not rot_y:r=5
+        
+        caja_rotada=cajas[i].rot[r]
+        lista_ord=bestFit(caja_rotada)
+
+
         for j in range(0,len(lista_ord)):
             ej=contenedores[0].espacios[lista_ord[j][0]]
             # num_esq=first_corner(ej)
             fc=first_corner(ej)
-            num_esq=first_corner(ej).num
+            # num_esq=first_corner(ej).num
+
+            num_esq=fc.num
+            if num_esq==2:
+                x=fc.x-caja_rotada.dx
+                y=fc.y
+                z=fc.z
+            elif num_esq==3:
+                x=fc.x
+                y=fc.y-caja_rotada.dy
+                z=fc.z
+            elif num_esq==4:
+                x=fc.x-caja_rotada.dx
+                y=fc.y-caja_rotada.dy
+                z=fc.z
+            else:
+                x=fc.x
+                y=fc.y
+                z=fc.z
+
             # if caja_cabe_en_esp(cajas[i],ej): #and contenedores[cont].espacios[j].z1==0:
                 # cupo=True
             print('Espacio:',j,'Esquina:',num_esq,'->',fc)
-            if num_esq==2:
-                ponerCaja(cajas[i],fc.x-cajas[i].dx,fc.y,fc.z,'y')
-            elif num_esq==3:
-                ponerCaja(cajas[i],fc.x,fc.y-cajas[i].dy,fc.z,'y')
-            elif num_esq==4:
-                ponerCaja(cajas[i],fc.x-cajas[i].dx,fc.y-cajas[i].dy,fc.z,'y')
-            else:
-            #Si la mejor esquina esta a la derecha la caja se pondra fuera del cont
-                ponerCaja(cajas[i],fc.x,fc.y,fc.z,'y')
+            ponerCaja(caja_rotada,x,y,z)
+
             print('\n')
             break
                 
@@ -330,7 +350,7 @@ def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False):
         #     print("no cabe")
         #     continue
         
-        # viz_paso_a_paso()
+        # viz_paso_a_paso(ejes_iguales=True)
 
 # cargarArchivo('WithOutRotation_5_0.txt')
 
@@ -340,10 +360,10 @@ def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False):
 
 
 
-bin_packing('WithOutRotation_5_0.txt',5)
+bin_packing('WoodBoxAll1.txt',10,True,False,True,unir_esp=True,expandir_esp=True)
 
 
-viz_paso_a_paso(False,multicolor=True)
+viz_paso_a_paso(True,multicolor=True,ejes_iguales=True)
 
 
 

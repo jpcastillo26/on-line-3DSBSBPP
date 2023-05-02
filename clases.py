@@ -33,6 +33,7 @@ class Caja:
         dx, dy, dz = self.dx, self.dy, self.dz
         #   rot=='y':
             # self.posx=self.posx+self.dx-self.dz
+        #TODO mejorar
         if numero==0:
             self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
         else:
