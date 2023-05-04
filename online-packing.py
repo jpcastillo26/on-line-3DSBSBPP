@@ -226,7 +226,7 @@ def ponerCaja(caja_sel,x,y,z,cont=0):
         temp.append(esp_encima)
     contenedores[cont].espacios=temp
     temp=[]
-    unir_esp()
+    unir_esp(cont)
             
 
 def first_corner(esp):
@@ -265,27 +265,45 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-def viz_paso_a_paso(vf=True,cont=0,multicolor=False,ejes_iguales=False):
+def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False):
     global contenedores
     
-    demo=[]
-    for obj in contenedores[0].cajas:
-            demo.append(obj)
-    if vf==True:
-        demo.append(contenedores[cont].espacios[0])
-        for obj in contenedores[cont].espacios:
-            demo.pop()
-            demo.append(obj)
+    
+    if contenedor is not None:
+        demo=[]
+        c=contenedor
+        for obj in contenedores[c].cajas:
+                demo.append(obj)
+        if vf==True:
+            demo.append(contenedores[c].espacios[0])
+            for obj in contenedores[c].espacios:
+                demo.pop()
+                demo.append(obj)
+                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        else:
             plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
     else:
-        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        for c in range(0,len(contenedores)):
+            demo=[]
+            for obj in contenedores[c].cajas:
+                    demo.append(obj)
+            if vf==True:
+                demo.append(contenedores[c].espacios[0])
+                for obj in contenedores[c].espacios:
+                    demo.pop()
+                    demo.append(obj)
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+            else:
+                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
-def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
+def bin_packing(instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
     global unir
     global expandir
     cargarArchivo(instancia)
     unir=unir_esp
     expandir=expandir_esp
+    if num_cajas is None:
+        num_cajas=Caja.num_cajas[0]
     
 
     for indice in range(0,num_cajas):
@@ -309,37 +327,47 @@ def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False,unir_
         elif rot_x and rot_z and not rot_y:r=5
         
         caja_rotada=cajas[i].rot[r]
-        lista_ord=bestFit(caja_rotada)
+        for c in range(0,len(contenedores)):
+            lista_ord=bestFit(caja_rotada,c)
 
+            if len(lista_ord)>0:
+                cupo=True
+                break
+
+        if cupo==False:
+            x2= Contenedor.dimensiones[0]
+            y2= Contenedor.dimensiones[1]
+            z2= Contenedor.dimensiones[2]
+            contenedores.append(Contenedor(c+1))
+            contenedores[c+1].espacios.append(Espmax(0,x2,0,y2,0,z2))
+            lista_ord=[[0,0]]
+            c=c+1
+            del x2,y2,z2
 
         for j in range(0,len(lista_ord)):
-            ej=contenedores[0].espacios[lista_ord[j][0]]
+            ej=contenedores[c].espacios[lista_ord[j][0]]
             # num_esq=first_corner(ej)
             fc=first_corner(ej)
             # num_esq=first_corner(ej).num
 
             num_esq=fc.num
             if num_esq==2:
-                x=fc.x-caja_rotada.dx
-                y=fc.y
-                z=fc.z
-            elif num_esq==3:
-                x=fc.x
-                y=fc.y-caja_rotada.dy
-                z=fc.z
-            elif num_esq==4:
-                x=fc.x-caja_rotada.dx
-                y=fc.y-caja_rotada.dy
-                z=fc.z
-            else:
-                x=fc.x
-                y=fc.y
-                z=fc.z
+                x,y,z = fc.x-caja_rotada.dx, fc.y, fc.z
 
-            # if caja_cabe_en_esp(cajas[i],ej): #and contenedores[cont].espacios[j].z1==0:
-                # cupo=True
+            elif num_esq==3:
+                x,y,z = fc.x, fc.y-caja_rotada.dy, fc.z
+
+            elif num_esq==4:
+                x,y,z = fc.x-caja_rotada.dx, fc.y-caja_rotada.dy, fc.z
+
+            else:
+                x,y,z = fc.x, fc.y, fc.z
+
+            # if caja_cabe_en_esp(caja_rotada,ej): #and contenedores[cont].espacios[j].z1==0:
+            #     cupo=True
+
             print('Espacio:',j,'Esquina:',num_esq,'->',fc)
-            ponerCaja(caja_rotada,x,y,z)
+            ponerCaja(caja_rotada,x,y,z,c)
 
             print('\n')
             break
@@ -360,12 +388,12 @@ def bin_packing(instancia,num_cajas=10,rot_x=False,rot_y=False,rot_z=False,unir_
 
 
 
-bin_packing('WoodBoxAll1.txt',10,True,False,True,unir_esp=True,expandir_esp=True)
+bin_packing('WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
 
 
-viz_paso_a_paso(True,multicolor=True,ejes_iguales=True)
+viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
 
-
+print("Las cajas caben en:",len(contenedores),"contenedores","\n")
 
 
 
