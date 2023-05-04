@@ -265,6 +265,22 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
+def worstFit(caja_sel,cont=0):
+
+    diff=[]
+    #TODO que pasa si no hay nigun espacio
+    for i in range(0,len(contenedores[cont].espacios)):
+        ei=contenedores[cont].espacios[i]
+        if caja_cabe_en_esp(caja_sel,ei):
+            diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
+
+    print('Lista de espacios:',diff)
+    diff.sort(key=lambda x: x[1],reverse=False)
+    print('Lista ordenada:',diff)
+
+    # abs(esp.dx-caja_sel)
+    return diff
+
 def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False):
     global contenedores
     
@@ -296,7 +312,7 @@ def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False)
             else:
                 plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
-def bin_packing(instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
+def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
     global unir
     global expandir
     cargarArchivo(instancia)
@@ -328,8 +344,12 @@ def bin_packing(instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,uni
         
         caja_rotada=cajas[i].rot[r]
         for c in range(0,len(contenedores)):
-            lista_ord=bestFit(caja_rotada,c)
-
+            if metodo=="best fit":
+                lista_ord=bestFit(caja_rotada,c)
+            elif metodo=="worst fit":
+                lista_ord=worstFit(caja_rotada,c)
+            else:
+                raise ValueError("El metodo seleccionado no es correcto")
             if len(lista_ord)>0:
                 cupo=True
                 break
@@ -388,7 +408,7 @@ def bin_packing(instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,uni
 
 
 
-bin_packing('WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
+bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
 
 
 viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
