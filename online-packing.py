@@ -32,7 +32,7 @@ def cargarArchivo(file_name):
         contents[i] = list(map(int,contents[i]))
         #num de cajas que debe haber
         if i == 0:
-            Caja.num_cajas=contents[0]
+            Caja.num_cajas=contents[0][0]
         #tamano del contenedor
         elif i == 1:
             Contenedor.dimensiones = contents[i]
@@ -319,7 +319,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
     unir=unir_esp
     expandir=expandir_esp
     if num_cajas is None:
-        num_cajas=Caja.num_cajas[0]
+        num_cajas=Caja.num_cajas
     
 
     for indice in range(0,num_cajas):
@@ -392,11 +392,6 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
             print('\n')
             break
                 
-        
-        #TODO si la caja no cabe colocarla en otro contenedor
-        # if cupo==False:
-        #     print("no cabe")
-        #     continue
         
         # viz_paso_a_paso(ejes_iguales=True)
 
