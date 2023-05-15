@@ -18,7 +18,7 @@ def gen_random_hex_color():
 
 def plotear2D(elem,largo,ancho):
     # Get the current reference
-    plt.plot(largo,ancho)
+    plt.plot()
     currentAxis = plt.gca()
     lista={}
     for i in range(0,len(elem)):
@@ -30,7 +30,8 @@ def plotear2D(elem,largo,ancho):
         elif isinstance(elem[i],Espmax):
             currentAxis.add_patch(Rectangle((elem[i].x1, elem[i].y1), elem[i].dx, elem[i].dy,
                                             fill=None, edgecolor='r', alpha=1))
-
+    plt.xlim([0-1,largo+1])
+    plt.ylim([0-1,ancho+1])
     plt.show()
 
 # def cc(arg):

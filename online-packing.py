@@ -281,28 +281,24 @@ def worstFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False):
+def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
     global contenedores
-    
-    
-    if contenedor is not None:
+    if dim==2:
         demo=[]
-        c=contenedor
-        for obj in contenedores[c].cajas:
-                demo.append(obj)
-        if vf==True:
-            demo.append(contenedores[c].espacios[0])
-            for obj in contenedores[c].espacios:
-                demo.pop()
-                demo.append(obj)
-                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
-        else:
-            plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        for obj in contenedores[0].cajas:
+            demo.append(obj)
+        demo.append(contenedores[0].espacios[0])
+        for obj in contenedores[0].espacios:
+            demo.pop()
+            demo.append(obj)
+            print(obj.esquinas[0].distX)
+            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1])
     else:
-        for c in range(0,len(contenedores)):
-            demo=[]
+        if contenedor is not None:
+            
+            c=contenedor
             for obj in contenedores[c].cajas:
-                    demo.append(obj)
+                demo.append(obj)
             if vf==True:
                 demo.append(contenedores[c].espacios[0])
                 for obj in contenedores[c].espacios:
@@ -311,6 +307,19 @@ def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False)
                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
             else:
                 plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        else:
+            for c in range(0,len(contenedores)):
+                demo=[]
+                for obj in contenedores[c].cajas:
+                    demo.append(obj)
+                if vf==True:
+                    demo.append(contenedores[c].espacios[0])
+                    for obj in contenedores[c].espacios:
+                        demo.pop()
+                        demo.append(obj)
+                        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+                else:
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
 def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
     global unir
@@ -403,17 +412,17 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
 
 
 
-bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
+# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
 
 
-viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
 
-print("Las cajas caben en:",len(contenedores),"contenedores","\n")
-
-
+# print("Las cajas caben en:",len(contenedores),"contenedores","\n")
 
 
-
+cargarArchivo('WithOutRotation_5_0.txt')
+ponerCaja(cajas[30],40,30,0)
+viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
 
 # ---------- rotaciones ------------------
