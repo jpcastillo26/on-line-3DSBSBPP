@@ -34,28 +34,44 @@ from pathlib import Path
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
 # demo 3
-# cargarArchivo('WithOutRotation_5_0.txt')
-# unir=True
-# expandir=True
-# ponerCaja(cajas[30],0,0,0)
+cargarArchivo('WithOutRotation_5_0.txt')
+unir=True
+expandir=True
+ponerCaja(cajas[30],0,0,0)
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
-# ponerCaja(cajas[74],0,100-35,0)
+ponerCaja(cajas[74],0,100-35,0)
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
-# ponerCaja(cajas[75],120-48,0,0)
+ponerCaja(cajas[75],120-48,0,0)
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 # ponerCaja(cajas[76],120-48,100-35,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+ponerCaja(cajas[31],120-34,100-48,0)
+viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
 # demo 4
-cargarArchivo('WithOutRotation_5_0.txt')
-ponerCaja(cajas[30],0,0,0)
-viz_paso_a_paso(True,multicolor=False,ejes_iguales=False)
+# cargarArchivo('WithOutRotation_5_0.txt')
+# ponerCaja(cajas[30],0,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=False)
 # ponerCaja(cajas[74],0,100-35,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
 # ponerCaja(cajas[75],120-48,0,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
 # ponerCaja(cajas[76],120-48,100-35,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=False)
+
+# demo 5
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=True,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+# reiniciar()
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=False,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+# reiniciar()
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=False,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+# reiniciar()
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=True,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+# reiniciar()
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
+# viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
+
 
 
 

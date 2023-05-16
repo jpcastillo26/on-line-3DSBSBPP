@@ -297,6 +297,7 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
     else:
         if contenedor is not None:
+            demo=[]
             c=contenedor
             for obj in contenedores[c].cajas:
                 demo.append(obj)
@@ -330,7 +331,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
     cargarArchivo(instancia)
     unir=unir_esp
     expandir=expandir_esp
-
+    
     if num_cajas is None:
         num_cajas=Caja.num_cajas
     
@@ -408,4 +409,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
         # viz_paso_a_paso(ejes_iguales=True)
 
 # cargarArchivo('WithOutRotation_5_0.txt')
-
+def reiniciar():
+    for c in range(0,len(contenedores)):
+        contenedores[c].cajas=[]
+        contenedores[c].espacios=[]
