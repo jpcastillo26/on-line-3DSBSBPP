@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 from clases import Caja
 from clases import Espmax
 # import numpy as np
-plt.rcParams['figure.figsize'] = [4, 3]
+# plt.rcParams['figure.figsize'] = [4, 3]
 #genera un color aleatorio
 def gen_random_hex_color():
     hex_digits = '0123456789ABCDEF'
@@ -38,9 +38,9 @@ def plotear2D(elem,largo,ancho,numero=1):
 # def cc(arg):
 #     return mcolors.to_rgba(arg, alpha=0.6)
 
-def plotear3D(elem,largo,ancho,alto,multicolor=False,ejes_iguales=False):
+def plotear3D(elem,largo,ancho,alto,multicolor=False,ejes_iguales=False,numero=1):
 
-    fig = plt.figure()
+    fig = plt.figure(num=numero)
     ax = fig.add_subplot(111, projection='3d')
     poly3d=[]
     for i in range(0,len(elem)):
