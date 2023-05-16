@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 from clases import Caja
 from clases import Espmax
 # import numpy as np
-
+plt.rcParams['figure.figsize'] = [4, 3]
 #genera un color aleatorio
 def gen_random_hex_color():
     hex_digits = '0123456789ABCDEF'
@@ -16,8 +16,9 @@ def gen_random_hex_color():
         for _ in range(6)
     )
 
-def plotear2D(elem,largo,ancho):
+def plotear2D(elem,largo,ancho,numero=1):
     # Get the current reference
+    plt.figure(num=numero)
     plt.plot()
     currentAxis = plt.gca()
     lista={}
@@ -29,9 +30,9 @@ def plotear2D(elem,largo,ancho):
         #espacios_max
         elif isinstance(elem[i],Espmax):
             currentAxis.add_patch(Rectangle((elem[i].x1, elem[i].y1), elem[i].dx, elem[i].dy,
-                                            fill=None, edgecolor='r', alpha=1))
-    plt.xlim([0-1,largo+1])
-    plt.ylim([0-1,ancho+1])
+                                            fill=None, edgecolor='r', alpha=1,))
+    plt.xlim([-7,largo+7])
+    plt.ylim([-7,ancho+7])
     plt.show()
 
 # def cc(arg):

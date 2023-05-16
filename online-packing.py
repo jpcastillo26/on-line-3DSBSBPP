@@ -288,14 +288,15 @@ def viz_paso_a_paso(vf=True,contenedor=None,multicolor=False,ejes_iguales=False,
         for obj in contenedores[0].cajas:
             demo.append(obj)
         demo.append(contenedores[0].espacios[0])
+        fig_num=0
         for obj in contenedores[0].espacios:
+            fig_num+=1
             demo.pop()
             demo.append(obj)
             print(obj.esquinas[0].distX)
-            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1])
+            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
     else:
         if contenedor is not None:
-            
             c=contenedor
             for obj in contenedores[c].cajas:
                 demo.append(obj)
@@ -327,10 +328,10 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
     cargarArchivo(instancia)
     unir=unir_esp
     expandir=expandir_esp
+
     if num_cajas is None:
         num_cajas=Caja.num_cajas
     
-
     for indice in range(0,num_cajas):
         i=Caja.seq[indice]
         #55
@@ -419,10 +420,47 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
 
 # print("Las cajas caben en:",len(contenedores),"contenedores","\n")
 
+# Demo 0
+# cargarArchivo('WithOutRotation_5_0.txt')
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
+# Demo 1
+# cargarArchivo('WithOutRotation_5_0.txt')
+# cajas[30]=Caja(30,40,40,20,0,0,0)
+# ponerCaja(cajas[30],40,30,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+
+# Demo 2
+# cargarArchivo('WithOutRotation_5_0.txt')
+# ponerCaja(cajas[30],0,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[75],120-48,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+
+# demo 3
+# cargarArchivo('WithOutRotation_5_0.txt')
+# unir=True
+# expandir=True
+# ponerCaja(cajas[30],0,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[74],0,100-35,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[75],120-48,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[76],120-48,100-35,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+
+# demo 4
 cargarArchivo('WithOutRotation_5_0.txt')
-ponerCaja(cajas[30],40,30,0)
-viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+ponerCaja(cajas[30],0,0,0)
+viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
+# ponerCaja(cajas[74],0,100-35,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
+# ponerCaja(cajas[75],120-48,0,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
+# ponerCaja(cajas[76],120-48,100-35,0)
+# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True)
+
 
 
 # ---------- rotaciones ------------------
