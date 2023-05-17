@@ -17,7 +17,7 @@ def cargarArchivo(file_name):
 
     # with open('C:\\Users\juanp\OneDrive - Universidad de los andes\PG2\Instances\WithOutRotation_5_0.txt') as f:
     base_path = Path(__file__).parent
-    file_path = (base_path / "./Instances/{}".format(file_name)).resolve()
+    file_path = (base_path / "./Instances/Prueba/{}".format(file_name)).resolve()
     # print(file_path)
     with open(file_path) as f:
         contents = f.read()

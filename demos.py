@@ -2,6 +2,8 @@ from online_packing import *
 from plots import *
 from clases import *
 from pathlib import Path
+import os
+
 
 #-------------------------------------------------------
 #---------------        Pruebas         ----------------
@@ -34,18 +36,18 @@ from pathlib import Path
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
 # demo 3
-cargarArchivo('WithOutRotation_5_0.txt')
-unir=True
-expandir=True
-ponerCaja(cajas[30],0,0,0)
+# cargarArchivo('WithOutRotation_5_0.txt')
+# unir=True
+# expandir=True
+# ponerCaja(cajas[30],0,0,0)
+# # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[74],0,100-35,0)
+# # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# ponerCaja(cajas[75],120-48,0,0)
+# # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
+# # ponerCaja(cajas[76],120-48,100-35,0)
+# ponerCaja(cajas[31],120-34,100-48,0)
 # viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
-ponerCaja(cajas[74],0,100-35,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
-ponerCaja(cajas[75],120-48,0,0)
-# viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
-# ponerCaja(cajas[76],120-48,100-35,0)
-ponerCaja(cajas[31],120-34,100-48,0)
-viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 
 # demo 4
 # cargarArchivo('WithOutRotation_5_0.txt')
@@ -72,8 +74,23 @@ viz_paso_a_paso(True,multicolor=False,ejes_iguales=True,dim=2)
 # bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
 # viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
 
+# with open('C:\\Users\juanp\OneDrive - Universidad de los andes\PG2\Instances\WithOutRotation_5_0.txt') as f:
+base_path = Path(__file__).parent
+# file_path = (base_path / "./Instances/{}".format(file_name)).resolve()
+# print(file_path)
+# folder path
+dir_path = (base_path / "./Instances/Solutions").resolve()
+# dir_path = r'E:\\account\\'
 
+# list to store files
+res = []
 
+# Iterate directory
+for path in os.listdir(dir_path):
+    # check if current path is a file
+    if os.path.isfile(os.path.join(dir_path, path)):
+        res.append(path)
+print(res)
 
 # ---------- rotaciones ------------------
 # cajas[30].agregar_rotaciones()
