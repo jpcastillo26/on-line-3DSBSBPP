@@ -56,7 +56,7 @@ def cargarArchivo(file_name,demo=False):
     else:
         file_path = (base_path / "./Instances/Solutions/Solutions/{}".format(file_name)).resolve()
 
-        logging.debug(file_path)
+        logger.debug(file_path)
         with open(file_path) as f:
             contents = f.read()
 
@@ -90,7 +90,7 @@ def cargarArchivo(file_name,demo=False):
 # TODO optimizar
 def unir_esp(cont=0):
     global contenedores
-    # logging.debug(contenedores[cont].espacios)
+    # logger.debug(contenedores[cont].espacios)
     nuevos_esp=[]
     
     seguir_uniendo=True
@@ -110,7 +110,7 @@ def unir_esp(cont=0):
                     # Unir contenedores[cont].espacios con X iguales y Y diferentes
                     if ej.x1==ei.x1 and ej.x2==ei.x2 and unir:
                         if not (ej.y2<ei.y1 or ej.y1>ei.y2):
-                            logging.debug('Match: %s, %s',ej,ei)
+                            logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             j = j-1
                             nuevos_esp.append(Espmax(ei.x1,ei.x2,min(ej.y1,ei.y1),max(ej.y2,ei.y2),ei.z1,ei.z2))
@@ -120,7 +120,7 @@ def unir_esp(cont=0):
                     elif ej.y1==ei.y1 and ej.y2==ei.y2 and unir:
                         #TODO pueden estar invertidos, hacer mas general para poder eliminar el nuevo loop con seguir_uniendo
                         if not (ej.x2<ei.x1 or ej.x1>ei.x2):
-                            logging.debug('Match: %s, %s',ej,ei)
+                            logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             j = j-1
                             nuevos_esp.append(Espmax(min(ej.x1,ei.x1),max(ej.x2,ei.x2),ei.y1,ei.y2,ei.z1,ei.z2))
@@ -132,7 +132,7 @@ def unir_esp(cont=0):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
                             if ej.y1 != min_y or ej.y2 != max_y:
-                                logging.debug('Expandiendo %s en Y con %s',ej,ei)
+                                logger.debug('Expandiendo %s en Y con %s',ej,ei)
                                 contenedores[cont].espacios[j].y1=min_y
                                 contenedores[cont].espacios[j].y2=max_y
 
@@ -141,7 +141,7 @@ def unir_esp(cont=0):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
                             if ej.x1 != min_x or ej.x2 != max_x:
-                                logging.debug('Expandiendo %s en X con %s',ej,ei)
+                                logger.debug('Expandiendo %s en X con %s',ej,ei)
                                 contenedores[cont].espacios[j].x1=min_x
                                 contenedores[cont].espacios[j].x2=max_x
 
@@ -151,7 +151,7 @@ def unir_esp(cont=0):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
                             if ej.y1 != min_y or ej.y2 != max_y:
-                                logging.debug('Expandiendo %s en Y con %s',ei,ej)
+                                logger.debug('Expandiendo %s en Y con %s',ei,ej)
                                 contenedores[cont].espacios[i].y1=min_y
                                 contenedores[cont].espacios[i].y2=max_y
 
@@ -160,7 +160,7 @@ def unir_esp(cont=0):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
                             if ej.x1 != min_x or ej.x2 != max_x:
-                                logging.debug('Expandiendo %s en X con %s',ei,ej)
+                                logger.debug('Expandiendo %s en X con %s',ei,ej)
                                 contenedores[cont].espacios[i].x1=min_x
                                 contenedores[cont].espacios[i].x2=max_x
 
@@ -175,7 +175,7 @@ def unir_esp(cont=0):
         # print('\n')          
         contenedores[cont].espacios=nuevos_esp
         nuevos_esp=[]
-    logging.debug('Nueva lista de espacios: %s',contenedores[cont].espacios)
+    logger.debug('Nueva lista de espacios: %s',contenedores[cont].espacios)
         
 def juntar_esp():
     pass
@@ -231,7 +231,7 @@ def ponerCaja(caja_sel,x,y,z,cont=0):
     # TODO buscar en caja_rot y retornarla, es el nuevo indice
     
     contenedores[cont].cajas.append(caja_sel)
-    logging.debug('Poniendo caja %s',caja_sel)
+    logger.debug('Poniendo caja %s',caja_sel)
     for i in range(0,len(contenedores[cont].espacios)):
         esp=contenedores[cont].espacios[i]
         # print(esp)
@@ -294,9 +294,9 @@ def bestFit(caja_sel,cont=0):
         if caja_cabe_en_esp(caja_sel,ei):
             diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
 
-    logging.debug('Lista de espacios: %s',diff)
+    logger.debug('Lista de espacios: %s',diff)
     diff.sort(key=lambda x: x[1],reverse=True)
-    logging.debug('Lista ordenada: %s',diff)
+    logger.debug('Lista ordenada: %s',diff)
 
     # abs(esp.dx-caja_sel)
     return diff
@@ -310,9 +310,9 @@ def worstFit(caja_sel,cont=0):
         if caja_cabe_en_esp(caja_sel,ei):
             diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
 
-    logging.debug('Lista de espacios: %s',diff)
+    logger.debug('Lista de espacios: %s',diff)
     diff.sort(key=lambda x: x[1],reverse=False)
-    logging.debug('Lista ordenada: %s',diff)
+    logger.debug('Lista ordenada: %s',diff)
 
     # abs(esp.dx-caja_sel)
     return diff
@@ -329,7 +329,7 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
             fig_num+=1
             demo.pop()
             demo.append(obj)
-            logging.debug(obj.esquinas[0].distX)
+            logger.debug(obj.esquinas[0].distX)
             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
     else:
         if contenedor is not None:
