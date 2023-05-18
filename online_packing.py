@@ -6,7 +6,7 @@ from clases import *
 from pathlib import Path
 import logging
 
-logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.DEBUG)
+
 logger = logging.getLogger(__name__)
 
 cajas=[]
@@ -285,7 +285,7 @@ def first_corner(esp):
     return fc
 
 
-def bestFit(caja_sel,cont=0):
+def worstFit(caja_sel,cont=0):
 
     diff=[]
     #TODO que pasa si no hay nigun espacio
@@ -301,7 +301,7 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-def worstFit(caja_sel,cont=0):
+def bestFit(caja_sel,cont=0):
 
     diff=[]
     #TODO que pasa si no hay nigun espacio
