@@ -6,7 +6,7 @@ from clases import *
 from pathlib import Path
 import logging
 
-logging.basicConfig(filename="on-line.log",filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 cajas=[]
