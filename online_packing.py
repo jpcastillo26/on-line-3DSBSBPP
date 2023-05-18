@@ -435,14 +435,14 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
             # if caja_cabe_en_esp(caja_rotada,ej): #and contenedores[cont].espacios[j].z1==0:
             #     cupo=True
 
-            print('Espacio:',j,'Esquina:',num_esq,'->',fc)
+            logger.debug('Espacio: %s Esquina: %s -> %s',j,num_esq,fc)
             ponerCaja(caja_rotada,x,y,z,c)
 
-            print('\n')
+            # print('\n')
             break
 
-    print("\n")         
-    return f"Las cajas caben en: {len(contenedores)} contenedores"
+    # print("\n")         
+    return len(contenedores)
         # viz_paso_a_paso(ejes_iguales=True)
 
 # cargarArchivo('WithOutRotation_5_0.txt')

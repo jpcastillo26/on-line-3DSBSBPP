@@ -3,7 +3,8 @@ from plots import *
 from clases import *
 from pathlib import Path
 import os
-
+from time import perf_counter
+from statistics import mean
 
 #-------------------------------------------------------
 #---------------        Pruebas         ----------------
@@ -93,6 +94,8 @@ for path in os.listdir(dir_path):
 # print(res)
 
 resultado=[]
+t1_start = perf_counter()
+
 for file_name in res:
     fl=file_name.split("_")[0]
     end=file_name.split("_")[4]
@@ -100,12 +103,19 @@ for file_name in res:
     
     if fl.count('I') == 1 and N_items==20:
         num=int(fl.replace('I',''))
-        if num<2:
+        if num<50:
             print(fl,N_items)
-            resultado.append(bin_packing("worst fit",instancia=file_name))
-        
-print(resultado)
 
+            resultado.append(bin_packing("worst fit",instancia=file_name))
+
+            # f"Las cajas caben en: {len(contenedores)} contenedores"
+t1_stop = perf_counter()
+
+print("Tiempo de procesamiento:",t1_stop-t1_start)
+
+print(resultado)
+avg=mean(resultado)
+print(avg)
 # ---------- rotaciones ------------------
 # cajas[30].agregar_rotaciones()
 # ponerCaja(cajas[30],0,0,0)
