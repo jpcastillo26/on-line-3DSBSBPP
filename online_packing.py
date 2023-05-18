@@ -4,7 +4,10 @@
 from plots import *
 from clases import *
 from pathlib import Path
+import logging
 
+logging.basicConfig(filename="on-line.log",filemode='w', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 cajas=[]
 # contenedores[cont]espacios=[]
@@ -13,38 +16,71 @@ temp=[]
 unir=True
 expandir=True
 
-def cargarArchivo(file_name):
+def cargarArchivo(file_name,demo=False):
 
     # with open('C:\\Users\juanp\OneDrive - Universidad de los andes\PG2\Instances\WithOutRotation_5_0.txt') as f:
     base_path = Path(__file__).parent
-    file_path = (base_path / "./Instances/Prueba/{}".format(file_name)).resolve()
-    # print(file_path)
-    with open(file_path) as f:
-        contents = f.read()
 
-    contents = contents.splitlines()
+    #Modo demo, lee los archivos de prueba
+    if demo:
+        file_path = (base_path / "./Instances/Prueba/{}".format(file_name)).resolve()
+        with open(file_path) as f:
+            contents = f.read()
+        
+        contents = contents.splitlines()
     
-    for i in range(0,len(contents)):
-        contents[i] = contents[i].strip('\n')
-        contents[i] = contents[i].strip()
-        contents[i] = contents[i].split('\t')
-        #convertir cada dato en lista de int
-        contents[i] = list(map(int,contents[i]))
-        #num de cajas que debe haber
-        if i == 0:
-            Caja.num_cajas=contents[0][0]
-        #tamano del contenedor
-        elif i == 1:
-            Contenedor.dimensiones = contents[i]
-            # Espmax.dimension = contents[i]
-            # Esquina.dimensiones = contents[i]
-            contenedores[0].espacios.append(Espmax.inic_from_file(contents[i]))
-        #crear la caja y agregarla a la lista de cajas
-        elif i>1 and i<len(contents)-1:
-            cajas.append(Caja.from_file(contents[i]))
-        #crear la secuencia
-        else:
-            Caja.seq = contents[i]
+        for i in range(0,len(contents)):
+            contents[i] = contents[i].strip('\n')
+            contents[i] = contents[i].strip()
+            contents[i] = contents[i].split('\t')
+            contents[i] = contents[i].split(' ')
+            #convertir cada dato en lista de int
+            contents[i] = list(map(int,contents[i]))
+            #num de cajas que debe haber
+            if i == 0:
+                Caja.num_cajas=contents[0][0]
+            #tamano del contenedor
+            elif i == 1:
+                Contenedor.dimensiones = contents[i]
+                # Espmax.dimension = contents[i]
+                # Esquina.dimensiones = contents[i]
+                contenedores[0].espacios.append(Espmax.inic_from_file(contents[i]))
+            #crear la caja y agregarla a la lista de cajas
+            elif i>1 and i<len(contents)-1:
+                cajas.append(Caja.from_file(contents[i]))
+            #crear la secuencia
+            else:
+                Caja.seq = contents[i]
+
+    # Modo real, lee las instancias oficiales
+    else:
+        file_path = (base_path / "./Instances/Solutions/Solutions/{}".format(file_name)).resolve()
+
+        logging.debug(file_path)
+        with open(file_path) as f:
+            contents = f.read()
+
+        contents = contents.splitlines()
+        
+        for i in range(0,len(contents)):
+            contents[i] = contents[i].split(' ')
+            #convertir cada dato en lista de int
+            contents[i] = list(map(int,contents[i]))
+            #num de cajas que debe haber
+            if i == 0:
+                Caja.num_cajas=contents[0][0]
+            #tamano del contenedor
+            elif i == 1:
+                Contenedor.dimensiones = contents[i]
+                # Espmax.dimension = contents[i]
+                # Esquina.dimensiones = contents[i]
+                contenedores[0].espacios.append(Espmax.inic_from_file(contents[i]))
+            #crear la caja y agregarla a la lista de cajas
+            elif i>1 and i<len(contents)-1:
+                cajas.append(Caja.from_file(contents[i]))
+            #crear la secuencia
+            else:
+                Caja.seq = contents[i]
 
     # return contents
 
@@ -54,7 +90,7 @@ def cargarArchivo(file_name):
 # TODO optimizar
 def unir_esp(cont=0):
     global contenedores
-    # print(contenedores[cont].espacios)
+    # logging.debug(contenedores[cont].espacios)
     nuevos_esp=[]
     
     seguir_uniendo=True
@@ -74,7 +110,7 @@ def unir_esp(cont=0):
                     # Unir contenedores[cont].espacios con X iguales y Y diferentes
                     if ej.x1==ei.x1 and ej.x2==ei.x2 and unir:
                         if not (ej.y2<ei.y1 or ej.y1>ei.y2):
-                            print('Match',ej,ei)
+                            logging.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             j = j-1
                             nuevos_esp.append(Espmax(ei.x1,ei.x2,min(ej.y1,ei.y1),max(ej.y2,ei.y2),ei.z1,ei.z2))
@@ -84,7 +120,7 @@ def unir_esp(cont=0):
                     elif ej.y1==ei.y1 and ej.y2==ei.y2 and unir:
                         #TODO pueden estar invertidos, hacer mas general para poder eliminar el nuevo loop con seguir_uniendo
                         if not (ej.x2<ei.x1 or ej.x1>ei.x2):
-                            print('Match',ej,ei)
+                            logging.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             j = j-1
                             nuevos_esp.append(Espmax(min(ej.x1,ei.x1),max(ej.x2,ei.x2),ei.y1,ei.y2,ei.z1,ei.z2))
@@ -96,7 +132,7 @@ def unir_esp(cont=0):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
                             if ej.y1 != min_y or ej.y2 != max_y:
-                                print('Expandiendo',ej,'en Y con',ei)
+                                logging.debug('Expandiendo %s en Y con %s',ej,ei)
                                 contenedores[cont].espacios[j].y1=min_y
                                 contenedores[cont].espacios[j].y2=max_y
 
@@ -105,7 +141,7 @@ def unir_esp(cont=0):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
                             if ej.x1 != min_x or ej.x2 != max_x:
-                                print('Expandiendo',ej,'en X con',ei)
+                                logging.debug('Expandiendo %s en X con %s',ej,ei)
                                 contenedores[cont].espacios[j].x1=min_x
                                 contenedores[cont].espacios[j].x2=max_x
 
@@ -115,7 +151,7 @@ def unir_esp(cont=0):
                             min_y=min(ei.y1,ej.y1)
                             max_y=max(ei.y2,ej.y2)
                             if ej.y1 != min_y or ej.y2 != max_y:
-                                print('Expandiendo',ei,'en Y con',ej)
+                                logging.debug('Expandiendo %s en Y con %s',ei,ej)
                                 contenedores[cont].espacios[i].y1=min_y
                                 contenedores[cont].espacios[i].y2=max_y
 
@@ -124,7 +160,7 @@ def unir_esp(cont=0):
                             min_x=min(ei.x1,ej.x1)
                             max_x=max(ei.x2,ej.x2)
                             if ej.x1 != min_x or ej.x2 != max_x:
-                                print('Expandiendo',ei,'en X con',ej)
+                                logging.debug('Expandiendo %s en X con %s',ei,ej)
                                 contenedores[cont].espacios[i].x1=min_x
                                 contenedores[cont].espacios[i].x2=max_x
 
@@ -139,7 +175,7 @@ def unir_esp(cont=0):
         # print('\n')          
         contenedores[cont].espacios=nuevos_esp
         nuevos_esp=[]
-    print('Nueva lista de espacios:',contenedores[cont].espacios)
+    logging.debug('Nueva lista de espacios: %s',contenedores[cont].espacios)
         
 def juntar_esp():
     pass
@@ -195,7 +231,7 @@ def ponerCaja(caja_sel,x,y,z,cont=0):
     # TODO buscar en caja_rot y retornarla, es el nuevo indice
     
     contenedores[cont].cajas.append(caja_sel)
-    print('Poniendo caja',caja_sel)
+    logging.debug('Poniendo caja %s',caja_sel)
     for i in range(0,len(contenedores[cont].espacios)):
         esp=contenedores[cont].espacios[i]
         # print(esp)
@@ -258,9 +294,9 @@ def bestFit(caja_sel,cont=0):
         if caja_cabe_en_esp(caja_sel,ei):
             diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
 
-    print('Lista de espacios:',diff)
+    logging.debug('Lista de espacios: %s',diff)
     diff.sort(key=lambda x: x[1],reverse=True)
-    print('Lista ordenada:',diff)
+    logging.debug('Lista ordenada: %s',diff)
 
     # abs(esp.dx-caja_sel)
     return diff
@@ -274,9 +310,9 @@ def worstFit(caja_sel,cont=0):
         if caja_cabe_en_esp(caja_sel,ei):
             diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
 
-    print('Lista de espacios:',diff)
+    logging.debug('Lista de espacios: %s',diff)
     diff.sort(key=lambda x: x[1],reverse=False)
-    print('Lista ordenada:',diff)
+    logging.debug('Lista ordenada: %s',diff)
 
     # abs(esp.dx-caja_sel)
     return diff
@@ -293,7 +329,7 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
             fig_num+=1
             demo.pop()
             demo.append(obj)
-            print(obj.esquinas[0].distX)
+            logging.debug(obj.esquinas[0].distX)
             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
     else:
         if contenedor is not None:
@@ -344,7 +380,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
         #TODO retornar lista ordenada con los contenedores[cont].espacios con esquinas mas cercanas
         
         cajas[i].agregar_rotaciones()
-        cajas[i].print_rotaciones()
+        # cajas[i].print_rotaciones()
 
         #TODO completar comb
         #TODO tener en cuenta el orden
@@ -404,8 +440,9 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
 
             print('\n')
             break
-                
-        
+
+    print("\n")         
+    return f"Las cajas caben en: {len(contenedores)} contenedores"
         # viz_paso_a_paso(ejes_iguales=True)
 
 # cargarArchivo('WithOutRotation_5_0.txt')
@@ -413,3 +450,5 @@ def reiniciar():
     for c in range(0,len(contenedores)):
         contenedores[c].cajas=[]
         contenedores[c].espacios=[]
+
+# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)

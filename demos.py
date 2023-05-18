@@ -79,7 +79,7 @@ base_path = Path(__file__).parent
 # file_path = (base_path / "./Instances/{}".format(file_name)).resolve()
 # print(file_path)
 # folder path
-dir_path = (base_path / "./Instances/Solutions").resolve()
+dir_path = (base_path / "./Instances/Solutions/Solutions/").resolve()
 # dir_path = r'E:\\account\\'
 
 # list to store files
@@ -90,7 +90,21 @@ for path in os.listdir(dir_path):
     # check if current path is a file
     if os.path.isfile(os.path.join(dir_path, path)):
         res.append(path)
-print(res)
+# print(res)
+
+resultado=[]
+for file_name in res:
+    fl=file_name.split("_")[0]
+    end=file_name.split("_")[4]
+    N_items=int(end[:-4])
+    
+    if fl.count('I') == 1 and N_items==20:
+        num=int(fl.replace('I',''))
+        if num<2:
+            print(fl,N_items)
+            resultado.append(bin_packing("worst fit",instancia=file_name))
+        
+print(resultado)
 
 # ---------- rotaciones ------------------
 # cajas[30].agregar_rotaciones()
