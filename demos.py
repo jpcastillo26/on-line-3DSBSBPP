@@ -75,6 +75,14 @@ from statistics import mean
 # bin_packing("best fit",instancia='WithOutRotation_5_0.txt',num_cajas=2,rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
 # viz_paso_a_paso(False,multicolor=False,ejes_iguales=True)
 
+
+
+
+
+#-------------------------------------------------------
+#---------------      Resultados        ----------------
+#-------------------------------------------------------
+
 # with open('C:\\Users\juanp\OneDrive - Universidad de los andes\PG2\Instances\WithOutRotation_5_0.txt') as f:
 base_path = Path(__file__).parent
 # file_path = (base_path / "./Instances/{}".format(file_name)).resolve()
@@ -92,30 +100,139 @@ for path in os.listdir(dir_path):
     if os.path.isfile(os.path.join(dir_path, path)):
         res.append(path)
 # print(res)
-
+print(res)
 resultado=[]
-t1_start = perf_counter()
+
+
+
+tipo_I_20=[]
+tipo_I_40=[]
+tipo_I_60=[]
+tipo_I_80=[]
+tipo_I_1000=[]
+tipo_II_20=[]
+tipo_II_40=[]
+tipo_II_60=[]
+tipo_II_80=[]
+tipo_II_1000=[]
+tipo_III_20=[]
+tipo_III_40=[]
+tipo_III_60=[]
+tipo_III_80=[]
+tipo_III_1000=[]
+tipo_IV_40=[]
+tipo_IV_1000=[]
+
+archivos_agrupados=[]
 
 for file_name in res:
-    fl=file_name.split("_")[0]
-    end=file_name.split("_")[4]
-    N_items=int(end[:-4])
+    tipo=file_name.split("_")[0]
+    N_items=int(file_name.split("_")[4][:-4])
     
-    if fl.count('I') == 1 and N_items==20:
-        num=int(fl.replace('I',''))
-        if num<50:
-            print(fl,N_items)
+    if tipo.count('I') == 1 and tipo.count('V') == 0:
+        if N_items==20:
+            tipo_I_20.append(file_name)
+        elif N_items==40:
+            tipo_I_40.append(file_name)
+        elif N_items==60:
+            tipo_I_60.append(file_name)
+        elif N_items==80:
+            tipo_I_80.append(file_name)
+        elif N_items==1000:
+            tipo_I_1000.append(file_name)
+        else:
+            raise ValueError("")
 
-            resultado.append(bin_packing("worst fit",instancia=file_name))
+    if tipo.count('I') == 2 and tipo.count('V') == 0:
+        if N_items==20:
+            tipo_II_20.append(file_name)
+        elif N_items==40:
+            tipo_II_40.append(file_name)
+        elif N_items==60:
+            tipo_II_60.append(file_name)
+        elif N_items==80:
+            tipo_II_80.append(file_name)
+        elif N_items==1000:
+            tipo_II_1000.append(file_name)
+        else:
+            raise ValueError("")
 
-            # f"Las cajas caben en: {len(contenedores)} contenedores"
-t1_stop = perf_counter()
+    if tipo.count('I') == 3 and tipo.count('V') == 0:
+        if N_items==20:
+            tipo_III_20.append(file_name)
+        elif N_items==40:
+            tipo_III_40.append(file_name)
+        elif N_items==60:
+            tipo_III_60.append(file_name)
+        elif N_items==80:
+            tipo_III_80.append(file_name)
+        elif N_items==1000:
+            tipo_III_1000.append(file_name)
+        else:
+            raise ValueError("")
 
-print("Tiempo de procesamiento:",t1_stop-t1_start)
+    if tipo.count('V') == 1:
+        if N_items==40:
+            tipo_IV_40.append(file_name)
+        elif N_items==1000:
+            tipo_IV_1000.append(file_name)
+        else:
+            raise ValueError("")
 
+    # if fn.count('I') == 1 and N_items==20:
+    #     num=int(fl.replace('I',''))
+    #     if num<50:
+    #         print(fl,N_items)
+
+    #         resultado.append(bin_packing("worst fit",instancia=file_name))
+
+    #         # f"Las cajas caben en: {len(contenedores)} contenedores"
+
+
+archivos_agrupados.append(tipo_I_20)
+archivos_agrupados.append(tipo_I_40)
+archivos_agrupados.append(tipo_I_60)
+archivos_agrupados.append(tipo_I_80)
+archivos_agrupados.append(tipo_I_1000)
+archivos_agrupados.append(tipo_II_20)
+archivos_agrupados.append(tipo_II_40)
+archivos_agrupados.append(tipo_II_60)
+archivos_agrupados.append(tipo_II_80)
+archivos_agrupados.append(tipo_II_1000)
+archivos_agrupados.append(tipo_III_20)
+archivos_agrupados.append(tipo_III_40)
+archivos_agrupados.append(tipo_III_60)
+archivos_agrupados.append(tipo_III_80)
+archivos_agrupados.append(tipo_III_1000)
+archivos_agrupados.append(tipo_IV_40)
+archivos_agrupados.append(tipo_IV_1000)
+
+
+# for data_set in archivos_agrupados:
+
+#     t1_start = perf_counter()
+
+#     for archivo_instancia in data_set:
+#         resultado.append(bin_packing("worst fit",instancia=archivo_instancia))
+
+#     t1_stop = perf_counter()
+
+#     print("Tiempo de procesamiento:",t1_stop-t1_start)
+#     avg=mean(resultado)
+
+
+print(archivos_agrupados)
 print(resultado)
-avg=mean(resultado)
-print(avg)
+
+# print(avg)
+
+
+
+
+
+
+
+
 # ---------- rotaciones ------------------
 # cajas[30].agregar_rotaciones()
 # ponerCaja(cajas[30],0,0,0)
