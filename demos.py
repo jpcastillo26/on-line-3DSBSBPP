@@ -193,7 +193,7 @@ archivos_agrupados.append(tipo_I_20)
 archivos_agrupados.append(tipo_I_40)
 archivos_agrupados.append(tipo_I_60)
 archivos_agrupados.append(tipo_I_80)
-# archivos_agrupados.append(tipo_I_1000)
+archivos_agrupados.append(tipo_I_1000)
 # archivos_agrupados.append(tipo_II_20)
 # archivos_agrupados.append(tipo_II_40)
 # archivos_agrupados.append(tipo_II_60)
@@ -215,6 +215,7 @@ for data_set in archivos_agrupados:
     t1_start = perf_counter()
 
     for archivo_instancia in data_set:
+        #revisar en 20
         num_contenedores.append(bin_packing("worst fit",instancia=archivo_instancia))
 
     t1_stop = perf_counter()

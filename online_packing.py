@@ -286,7 +286,6 @@ def first_corner(esp):
 
 
 def worstFit(caja_sel,cont=0):
-
     diff=[]
     #TODO que pasa si no hay nigun espacio
     for i in range(0,len(contenedores[cont].espacios)):
@@ -302,7 +301,6 @@ def worstFit(caja_sel,cont=0):
     return diff
 
 def bestFit(caja_sel,cont=0):
-
     diff=[]
     #TODO que pasa si no hay nigun espacio
     for i in range(0,len(contenedores[cont].espacios)):
@@ -364,7 +362,11 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
 def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
     global unir
     global expandir
+    global contenedores
+    contenedores.clear()
+    contenedores=[Contenedor(0)]
     cargarArchivo(instancia)
+    
     unir=unir_esp
     expandir=expandir_esp
     
