@@ -12,16 +12,14 @@ logger = logging.getLogger(__name__)
 cajas=[]
 # contenedores[cont]espacios=[]
 contenedores=[Contenedor(0)]
-temp=[]
 unir=True
 expandir=True
 
 def cargarArchivo(file_name,demo=False):
 
-    # with open('C:\\Users\juanp\OneDrive - Universidad de los andes\PG2\Instances\WithOutRotation_5_0.txt') as f:
     base_path = Path(__file__).parent
 
-    #Modo demo, lee los archivos de prueba
+    #Modo demo, lee los archivos de prueba WithOutRotation_5_0.txt
     if demo:
         file_path = (base_path / "./Instances/Prueba/{}".format(file_name)).resolve()
         with open(file_path) as f:
@@ -85,7 +83,6 @@ def cargarArchivo(file_name,demo=False):
 
 
 
-# TODO expandir contenedores[cont].espacios
 # TODO optimizar
 def unir_esp(cont=0):
     global contenedores
@@ -176,8 +173,6 @@ def unir_esp(cont=0):
         nuevos_esp=[]
     logger.debug('Nueva lista de espacios: %s',contenedores[cont].espacios)
         
-def juntar_esp():
-    pass
 
 def caja_espacio_inter(caja_sel,esp):
     if caja_sel.posx >= esp.x2 or esp.x1 >= caja_sel.posx2  or caja_sel.posy >= esp.y2 or esp.y1 >= caja_sel.posy2:
@@ -206,7 +201,6 @@ def caja_cabe_en_esp(caja_sel,esp):
 #         ponerCaja(cajas[i],fc.x,fc.y,fc.z)
 #     pass
 
-
 # print('cajas esperadas:' + str(caja.num_cajas[0]))
 # print('cajas creadas:' + str(caja.num_cajas_act))
 # # print(caja.seq)
@@ -214,15 +208,8 @@ def caja_cabe_en_esp(caja_sel,esp):
 
 def ponerCaja(caja_sel,x,y,z,cont=0):
     global contenedores
-    global temp
-    # print(rot)
-    #TODO checkear si ya hay una caja ahi o solo poner dentro del espacio
-    #TODO checkear si la caja entra en los limites del contenedor o del espacio
+    temp=[]
 
-    # TODO rotar caja
-    # if rot != None:
-    #     rotar_caja(caja_sel,rot)
-    
 
     # caja_sel.posx, caja_sel.posy, caja_sel.posz = x, y, z
     cajas[caja_sel.num].actualizar_pos(x,y,z)
@@ -230,7 +217,7 @@ def ponerCaja(caja_sel,x,y,z,cont=0):
     # TODO buscar en caja_rot y retornarla, es el nuevo indice
     
     contenedores[cont].cajas.append(caja_sel)
-    logger.info('Poniendo caja %s',caja_sel)
+    logger.debug('Poniendo caja %s',caja_sel)
     for i in range(0,len(contenedores[cont].espacios)):
         esp=contenedores[cont].espacios[i]
         # print(esp)
@@ -314,6 +301,7 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
+# Es el mismo metodo que esta en plot, este solo esta para compatibilidad o pruebas pero no se nesecita
 def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
     global contenedores
     fig_num=0
@@ -437,7 +425,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
             x,y,z = fc.x, fc.y, fc.z
 
 
-        logger.info('Espacio: %s Esquina: %s -> %s',num_esp,num_esq,fc)
+        logger.debug('Espacio: %s Esquina: %s -> %s',num_esp,num_esq,fc)
         ponerCaja(caja_rotada,x,y,z,c)
 
         # print('\n')

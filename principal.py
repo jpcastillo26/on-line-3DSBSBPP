@@ -8,9 +8,7 @@ from statistics import mean
 import logging
 
 # Solo poner en DEBUG si son muy pocas instancias!!!
-# Info solo si no son las 1700 instancias
-logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.WARNING)
-
+logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.INFO)
 
 #-------------------------------------------------------
 #---------------        Pruebas         ----------------
@@ -144,7 +142,7 @@ for file_name in res:
         elif N_items==1000:
             tipo_I_1000.append(file_name)
         else:
-            raise ValueError("")
+            raise ValueError("Error leyendo las instancias")
 
     elif tipo.count('I') == 2 and tipo.count('V') == 0:
         if N_items==20:
@@ -158,7 +156,7 @@ for file_name in res:
         elif N_items==1000:
             tipo_II_1000.append(file_name)
         else:
-            raise ValueError("")
+            raise ValueError("Error leyendo las instancias")
 
     elif tipo.count('I') == 3 and tipo.count('V') == 0:
         if N_items==20:
@@ -172,7 +170,7 @@ for file_name in res:
         elif N_items==1000:
             tipo_III_1000.append(file_name)
         else:
-            raise ValueError("")
+            raise ValueError("Error leyendo las instancias")
 
     elif tipo.count('V') == 1:
         if N_items==40:
@@ -180,7 +178,7 @@ for file_name in res:
         elif N_items==1000:
             tipo_IV_1000.append(file_name)
         else:
-            raise ValueError("")
+            raise ValueError("Error leyendo las instancias")
 
 # if fn.count('I') == 1 and N_items==20:
 #     num=int(fl.replace('I',''))
@@ -250,69 +248,3 @@ for data_set in archivos_agrupados:
 # # print(archivos_agrupados)
 print(resultados)
 
-
-
-
-
-
-
-
-# ---------- rotaciones ------------------
-# cajas[30].agregar_rotaciones()
-# ponerCaja(cajas[30],0,0,0)
-# ponerCaja(cajas[74],0,100-35,0)
-# cajas[74].agregar_rotaciones()
-# cajas[75].agregar_rotaciones()
-# ponerCaja(cajas[75],120-48,0,0)
-# ponerCaja(cajas[76],120-48,100-35,0)
-
-# # # # #demo 3d
-# # # ponerCaja(caja(100,25,38,16,5,5,16),5,5,16)
-# # # ponerCaja(caja(101,20,33,16,0,0,0),5,5,32)
-# # # ponerCaja(caja(102,15,25,16,0,0,0),5,5,48)
-# # # ponerCaja(caja(103,10,20,16,0,0,0),5,5,64)
-
-# first_corner()
-# ponerCaja(cajas[30],0,0,0)
-# first_corner()
-# paso_a_paso()
-
-# ponerCaja(cajas[74],0,100-35,0)
-# first_corner()
-# paso_a_paso()
-
-# ponerCaja(cajas[75],120-48,0,0)
-# first_corner()
-# paso_a_paso()
-
-
-# #----------- Caso 2D --------------
-# demo.append(contenedores[cont].espacios[0])
-# for obj in contenedores[cont].espacios:
-#     demo.pop()
-#     demo.append(obj)
-#     print(obj.esquinas[0].distX)
-#     plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1])#,Contenedor.dimensiones[2])
-
-
-# cajas[30].print_rotaciones()
-# cajas[74].print_rotaciones()
-# cajas[75].print_rotaciones()
-# cajas[76].print_rotaciones()
-
-
-
-#------------ Error ESPMAX ------------
-
-# for i in range(0,3):
-
-#     for e in range(0,4):
-#         BF=contenedores[cont].espacios[0].esquinas[0]
-#         if contenedores[cont].espacios[0].esquinas[e].distX < BF.distX:
-#             BF=contenedores[cont].espacios[0].esquinas[e]
-        
-    
-#     ponerCaja(cajas[i],BF.x,BF.y,0)
-
-
-#woodboxall1 poner 7 cajas
