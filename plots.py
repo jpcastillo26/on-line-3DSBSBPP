@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 # from matplotlib import colors as mcolors
 from clases import Caja
 from clases import Espmax
+from clases import Contenedor
 # import numpy as np
 # plt.rcParams['figure.figsize'] = [4, 3]
 #genera un color aleatorio
@@ -88,3 +89,45 @@ def plotear3D(elem,largo,ancho,alto,multicolor=False,ejes_iguales=False,numero=1
     plt.show()
 
 
+def viz_paso_a_paso(contenedores,paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
+    fig_num=0
+    if dim==2:
+        demo=[]
+        for obj in contenedores[0].cajas:
+            demo.append(obj)
+        demo.append(contenedores[0].espacios[0])
+        for obj in contenedores[0].espacios:
+            fig_num+=1
+            demo.pop()
+            demo.append(obj)
+            # logger.debug(obj.esquinas[0].distX)
+            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
+    else:
+        if contenedor is not None:
+            demo=[]
+            c=contenedor
+            for obj in contenedores[c].cajas:
+                demo.append(obj)
+            if paso==True:
+                demo.append(contenedores[c].espacios[0])
+                for obj in contenedores[c].espacios:
+                    fig_num+=1
+                    demo.pop()
+                    demo.append(obj)
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+            else:
+                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        else:
+            for c in range(0,len(contenedores)):
+                demo=[]
+                for obj in contenedores[c].cajas:
+                    demo.append(obj)
+                if paso==True:
+                    demo.append(contenedores[c].espacios[0])
+                    for obj in contenedores[c].espacios:
+                        fig_num+=1
+                        demo.pop()
+                        demo.append(obj)
+                        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+                else:
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)

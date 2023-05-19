@@ -1,6 +1,6 @@
 class Caja:
     num_cajas=0
-    num_cajas_act=0
+    conteo_de_cajas=0
     seq=[]
     def __init__(self, num, dx, dy, dz,posx,posy,posz):
         self.num = num
@@ -14,7 +14,7 @@ class Caja:
         self.posy = posy
         self.posz = posz
         self.rot = []
-        Caja.num_cajas_act += 1
+        Caja.conteo_de_cajas += 1
         
     
     @property

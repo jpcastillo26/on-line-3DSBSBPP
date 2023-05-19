@@ -315,49 +315,49 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
-    global contenedores
-    fig_num=0
-    if dim==2:
-        demo=[]
-        for obj in contenedores[0].cajas:
-            demo.append(obj)
-        demo.append(contenedores[0].espacios[0])
-        for obj in contenedores[0].espacios:
-            fig_num+=1
-            demo.pop()
-            demo.append(obj)
-            logger.debug(obj.esquinas[0].distX)
-            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
-    else:
-        if contenedor is not None:
-            demo=[]
-            c=contenedor
-            for obj in contenedores[c].cajas:
-                demo.append(obj)
-            if paso==True:
-                demo.append(contenedores[c].espacios[0])
-                for obj in contenedores[c].espacios:
-                    fig_num+=1
-                    demo.pop()
-                    demo.append(obj)
-                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
-            else:
-                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
-        else:
-            for c in range(0,len(contenedores)):
-                demo=[]
-                for obj in contenedores[c].cajas:
-                    demo.append(obj)
-                if paso==True:
-                    demo.append(contenedores[c].espacios[0])
-                    for obj in contenedores[c].espacios:
-                        fig_num+=1
-                        demo.pop()
-                        demo.append(obj)
-                        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
-                else:
-                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+# def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
+#     global contenedores
+#     fig_num=0
+#     if dim==2:
+#         demo=[]
+#         for obj in contenedores[0].cajas:
+#             demo.append(obj)
+#         demo.append(contenedores[0].espacios[0])
+#         for obj in contenedores[0].espacios:
+#             fig_num+=1
+#             demo.pop()
+#             demo.append(obj)
+#             logger.debug(obj.esquinas[0].distX)
+#             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
+#     else:
+#         if contenedor is not None:
+#             demo=[]
+#             c=contenedor
+#             for obj in contenedores[c].cajas:
+#                 demo.append(obj)
+#             if paso==True:
+#                 demo.append(contenedores[c].espacios[0])
+#                 for obj in contenedores[c].espacios:
+#                     fig_num+=1
+#                     demo.pop()
+#                     demo.append(obj)
+#                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+#             else:
+#                 plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+#         else:
+#             for c in range(0,len(contenedores)):
+#                 demo=[]
+#                 for obj in contenedores[c].cajas:
+#                     demo.append(obj)
+#                 if paso==True:
+#                     demo.append(contenedores[c].espacios[0])
+#                     for obj in contenedores[c].espacios:
+#                         fig_num+=1
+#                         demo.pop()
+#                         demo.append(obj)
+#                         plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+#                 else:
+#                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
 def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
     global unir
@@ -365,6 +365,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
     global contenedores
     contenedores.clear()
     contenedores=[Contenedor(0)]
+    cajas.clear()
     cargarArchivo(instancia)
     
     unir=unir_esp
@@ -394,6 +395,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
         elif rot_x and rot_z and not rot_y:r=5
         
         caja_rotada=cajas[i].rot[r]
+        # ------ Fist Fit en los contenedores ------
         for c in range(0,len(contenedores)):
             if metodo=="best fit":
                 lista_ord=bestFit(caja_rotada,c)

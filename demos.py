@@ -207,7 +207,23 @@ archivos_agrupados.append(tipo_I_1000)
 # archivos_agrupados.append(tipo_IV_40)
 # archivos_agrupados.append(tipo_IV_1000)
 
-
+del tipo_I_20
+del tipo_I_40
+del tipo_I_60
+del tipo_I_80
+del tipo_I_1000
+del tipo_II_20
+del tipo_II_40
+del tipo_II_60
+del tipo_II_80
+del tipo_II_1000
+del tipo_III_20
+del tipo_III_40
+del tipo_III_60
+del tipo_III_80
+del tipo_III_1000
+del tipo_IV_40
+del tipo_IV_1000
 
 resultados={'avg num contenedores':[],'tiempo':[]}
 for data_set in archivos_agrupados:
