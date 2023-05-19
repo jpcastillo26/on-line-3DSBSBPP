@@ -7,7 +7,8 @@ from time import perf_counter
 from statistics import mean
 import logging
 
-# TODO arreglar logs
+# Solo poner en DEBUG si son muy pocas instancias!!!
+# Info solo si no son las 1700 instancias
 logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.WARNING)
 
 
@@ -145,7 +146,7 @@ for file_name in res:
         else:
             raise ValueError("")
 
-    if tipo.count('I') == 2 and tipo.count('V') == 0:
+    elif tipo.count('I') == 2 and tipo.count('V') == 0:
         if N_items==20:
             tipo_II_20.append(file_name)
         elif N_items==40:
@@ -159,7 +160,7 @@ for file_name in res:
         else:
             raise ValueError("")
 
-    if tipo.count('I') == 3 and tipo.count('V') == 0:
+    elif tipo.count('I') == 3 and tipo.count('V') == 0:
         if N_items==20:
             tipo_III_20.append(file_name)
         elif N_items==40:
@@ -173,7 +174,7 @@ for file_name in res:
         else:
             raise ValueError("")
 
-    if tipo.count('V') == 1:
+    elif tipo.count('V') == 1:
         if N_items==40:
             tipo_IV_40.append(file_name)
         elif N_items==1000:
@@ -193,7 +194,7 @@ archivos_agrupados.append(tipo_I_20)
 archivos_agrupados.append(tipo_I_40)
 archivos_agrupados.append(tipo_I_60)
 archivos_agrupados.append(tipo_I_80)
-archivos_agrupados.append(tipo_I_1000)
+# archivos_agrupados.append(tipo_I_1000)
 # archivos_agrupados.append(tipo_II_20)
 # archivos_agrupados.append(tipo_II_40)
 # archivos_agrupados.append(tipo_II_60)
@@ -247,7 +248,7 @@ for data_set in archivos_agrupados:
 # viz_paso_a_paso(False)
 # print(pr)
 # # print(archivos_agrupados)
-# print(resultados)
+print(resultados)
 
 
 
