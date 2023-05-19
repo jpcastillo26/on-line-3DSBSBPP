@@ -89,7 +89,7 @@ def plotear3D(elem,largo,ancho,alto,multicolor=False,ejes_iguales=False,numero=1
     plt.show()
 
 
-def viz_paso_a_paso(contenedores,paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
+def visualizar(contenedores,paso=False,contenedor_especifico=None,multicolor=False,ejes_iguales=False,dim=3):
     fig_num=0
     if dim==2:
         demo=[]
@@ -103,9 +103,9 @@ def viz_paso_a_paso(contenedores,paso=True,contenedor=None,multicolor=False,ejes
             # logger.debug(obj.esquinas[0].distX)
             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
     else:
-        if contenedor is not None:
+        if contenedor_especifico is not None:
             demo=[]
-            c=contenedor
+            c=contenedor_especifico
             for obj in contenedores[c].cajas:
                 demo.append(obj)
             if paso==True:
@@ -120,14 +120,15 @@ def viz_paso_a_paso(contenedores,paso=True,contenedor=None,multicolor=False,ejes
         else:
             for c in range(0,len(contenedores)):
                 demo=[]
+                fig_num+=1
                 for obj in contenedores[c].cajas:
                     demo.append(obj)
                 if paso==True:
                     demo.append(contenedores[c].espacios[0])
                     for obj in contenedores[c].espacios:
-                        fig_num+=1
+                        
                         demo.pop()
                         demo.append(obj)
                         plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
                 else:
-                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)

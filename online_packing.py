@@ -33,7 +33,6 @@ def cargarArchivo(file_name,demo=False):
             contents[i] = contents[i].strip('\n')
             contents[i] = contents[i].strip()
             contents[i] = contents[i].split('\t')
-            contents[i] = contents[i].split(' ')
             #convertir cada dato en lista de int
             contents[i] = list(map(int,contents[i]))
             #num de cajas que debe haber
@@ -56,7 +55,7 @@ def cargarArchivo(file_name,demo=False):
     else:
         file_path = (base_path / "./Instances/Solutions/Solutions/{}".format(file_name)).resolve()
 
-        logger.debug(file_path)
+        logger.info(file_path)
         with open(file_path) as f:
             contents = f.read()
 
@@ -231,7 +230,7 @@ def ponerCaja(caja_sel,x,y,z,cont=0):
     # TODO buscar en caja_rot y retornarla, es el nuevo indice
     
     contenedores[cont].cajas.append(caja_sel)
-    logger.debug('Poniendo caja %s',caja_sel)
+    logger.info('Poniendo caja %s',caja_sel)
     for i in range(0,len(contenedores[cont].espacios)):
         esp=contenedores[cont].espacios[i]
         # print(esp)
@@ -315,58 +314,58 @@ def bestFit(caja_sel,cont=0):
     # abs(esp.dx-caja_sel)
     return diff
 
-# def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
-#     global contenedores
-#     fig_num=0
-#     if dim==2:
-#         demo=[]
-#         for obj in contenedores[0].cajas:
-#             demo.append(obj)
-#         demo.append(contenedores[0].espacios[0])
-#         for obj in contenedores[0].espacios:
-#             fig_num+=1
-#             demo.pop()
-#             demo.append(obj)
-#             logger.debug(obj.esquinas[0].distX)
-#             plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
-#     else:
-#         if contenedor is not None:
-#             demo=[]
-#             c=contenedor
-#             for obj in contenedores[c].cajas:
-#                 demo.append(obj)
-#             if paso==True:
-#                 demo.append(contenedores[c].espacios[0])
-#                 for obj in contenedores[c].espacios:
-#                     fig_num+=1
-#                     demo.pop()
-#                     demo.append(obj)
-#                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
-#             else:
-#                 plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
-#         else:
-#             for c in range(0,len(contenedores)):
-#                 demo=[]
-#                 for obj in contenedores[c].cajas:
-#                     demo.append(obj)
-#                 if paso==True:
-#                     demo.append(contenedores[c].espacios[0])
-#                     for obj in contenedores[c].espacios:
-#                         fig_num+=1
-#                         demo.pop()
-#                         demo.append(obj)
-#                         plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
-#                 else:
-#                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=False,dim=3):
+    global contenedores
+    fig_num=0
+    if dim==2:
+        demo=[]
+        for obj in contenedores[0].cajas:
+            demo.append(obj)
+        demo.append(contenedores[0].espacios[0])
+        for obj in contenedores[0].espacios:
+            fig_num+=1
+            demo.pop()
+            demo.append(obj)
+            logger.debug(obj.esquinas[0].distX)
+            plotear2D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],numero=fig_num)
+    else:
+        if contenedor is not None:
+            demo=[]
+            c=contenedor
+            for obj in contenedores[c].cajas:
+                demo.append(obj)
+            if paso==True:
+                demo.append(contenedores[c].espacios[0])
+                for obj in contenedores[c].espacios:
+                    fig_num+=1
+                    demo.pop()
+                    demo.append(obj)
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+            else:
+                plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
+        else:
+            for c in range(0,len(contenedores)):
+                demo=[]
+                for obj in contenedores[c].cajas:
+                    demo.append(obj)
+                if paso==True:
+                    demo.append(contenedores[c].espacios[0])
+                    for obj in contenedores[c].espacios:
+                        fig_num+=1
+                        demo.pop()
+                        demo.append(obj)
+                        plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales,fig_num)
+                else:
+                    plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
-def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True):
+def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
     global unir
     global expandir
     global contenedores
     contenedores.clear()
     contenedores=[Contenedor(0)]
     cajas.clear()
-    cargarArchivo(instancia)
+    cargarArchivo(instancia,demo=modo_demo)
     
     unir=unir_esp
     expandir=expandir_esp
@@ -417,37 +416,37 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
             c=c+1
             del x2,y2,z2
 
-        for j in range(0,len(lista_ord)):
-            ej=contenedores[c].espacios[lista_ord[j][0]]
-            # num_esq=first_corner(ej)
-            fc=first_corner(ej)
-            # num_esq=first_corner(ej).num
+        # for j in range(0,len(lista_ord)):
+        ej=contenedores[c].espacios[lista_ord[0][0]]
+        # num_esq=first_corner(ej)
+        fc=first_corner(ej)
+        # num_esq=first_corner(ej).num
 
-            num_esq=fc.num
-            if num_esq==2:
-                x,y,z = fc.x-caja_rotada.dx, fc.y, fc.z
+        num_esq=fc.num
+        num_esp=lista_ord[0][0]
+        if num_esq==2:
+            x,y,z = fc.x-caja_rotada.dx, fc.y, fc.z
 
-            elif num_esq==3:
-                x,y,z = fc.x, fc.y-caja_rotada.dy, fc.z
+        elif num_esq==3:
+            x,y,z = fc.x, fc.y-caja_rotada.dy, fc.z
 
-            elif num_esq==4:
-                x,y,z = fc.x-caja_rotada.dx, fc.y-caja_rotada.dy, fc.z
+        elif num_esq==4:
+            x,y,z = fc.x-caja_rotada.dx, fc.y-caja_rotada.dy, fc.z
 
-            else:
-                x,y,z = fc.x, fc.y, fc.z
+        else:
+            x,y,z = fc.x, fc.y, fc.z
 
-            # if caja_cabe_en_esp(caja_rotada,ej): #and contenedores[cont].espacios[j].z1==0:
-            #     cupo=True
 
-            logger.debug('Espacio: %s Esquina: %s -> %s',j,num_esq,fc)
-            ponerCaja(caja_rotada,x,y,z,c)
+        logger.info('Espacio: %s Esquina: %s -> %s',num_esp,num_esq,fc)
+        ponerCaja(caja_rotada,x,y,z,c)
 
-            # print('\n')
-            break
-
+        # print('\n')
+        
+    if viz:
+        visualizar(contenedores,ejes_iguales=True)
     # print("\n")         
     return len(contenedores)
-        # viz_paso_a_paso(ejes_iguales=True)
+
 
 # cargarArchivo('WithOutRotation_5_0.txt')
 def reiniciar():
@@ -455,4 +454,4 @@ def reiniciar():
         contenedores[c].cajas=[]
         contenedores[c].espacios=[]
 
-# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True)
+# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True,modo_demo=True,viz=True)
