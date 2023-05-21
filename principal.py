@@ -223,6 +223,11 @@ del tipo_III_80
 del tipo_III_1000
 del tipo_IV_40
 del tipo_IV_1000
+del dir_path, tipo, res, N_items
+
+
+
+
 
 resultados={'avg num contenedores':[],'tiempo':[]}
 for data_set in archivos_agrupados:
@@ -230,7 +235,7 @@ for data_set in archivos_agrupados:
     t1_start = perf_counter()
 
     for archivo_instancia in data_set:
-        #revisar en 20
+        #cambiar metodo para obtener resultados
         num_contenedores.append(bin_packing("worst fit",instancia=archivo_instancia))
 
     t1_stop = perf_counter()

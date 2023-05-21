@@ -27,14 +27,14 @@ class Caja:
     def posz2(self):
         return self.posz + self.dz
 
-    def agregar_rotaciones(self,numero=1):
+    def agregar_rotaciones(self,todas=True):
         # self.rot=rot
         
         dx, dy, dz = self.dx, self.dy, self.dz
         #   rot=='y':
             # self.posx=self.posx+self.dx-self.dz
         #TODO mejorar
-        if numero==0:
+        if not todas:
             self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,0,'zz'))
         else:
             #  original:
