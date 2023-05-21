@@ -347,7 +347,7 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
 # La condicion all_rotaciones anula las demas rotaciones
-def bin_packing(metodo,instancia,num_cajas=None,rot=0,rot_x=False,rot_y=False,rot_z=False,all_rotaciones=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
+def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,all_rotaciones=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
     global unir
     global expandir
     global contenedores
@@ -405,7 +405,7 @@ def bin_packing(metodo,instancia,num_cajas=None,rot=0,rot_x=False,rot_y=False,ro
                 logger.debug('Lista ordenada: %s',lista_ord)
 
             elif metodo=="worst fit":
-                for r in range(6):
+                for r in range(rango_inf,rango_sup):
 
                     lista=worstFit(cajas[i].rot[r],c)
 

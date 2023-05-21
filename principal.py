@@ -236,7 +236,7 @@ for data_set in archivos_agrupados:
 
     for archivo_instancia in data_set:
         #cambiar metodo para obtener resultados
-        num_contenedores.append(bin_packing("worst fit",instancia=archivo_instancia))
+        num_contenedores.append(bin_packing("worst fit",instancia=archivo_instancia,all_rotaciones=False))
 
     t1_stop = perf_counter()
     tiempo=t1_stop-t1_start
