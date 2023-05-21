@@ -8,6 +8,7 @@ import logging
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.DEBUG)
 
 cajas=[]
 # contenedores[cont]espacios=[]
@@ -305,11 +306,12 @@ def bestFit(caja_sel,cont=0):
     for i in range(0,len(contenedores[cont].espacios)):
         ei=contenedores[cont].espacios[i]
         if caja_cabe_en_esp(caja_sel,ei):
-            diff.append([i,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx)])
+            # espacio, numero de caja, num de rotacion, distancia a los bordes
+            diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx))))
 
     logger.debug('Lista de espacios: %s',diff)
-    diff.sort(key=lambda x: x[1],reverse=False)
-    logger.debug('Lista ordenada: %s',diff)
+    # diff.sort(key=lambda x: x[1],reverse=False)
+    # logger.debug('Lista ordenada: %s',diff)
 
     # abs(esp.dx-caja_sel)
     return diff
@@ -358,7 +360,7 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
                 else:
                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
-def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
+def bin_packing(metodo,instancia,num_cajas=None,rot=0,rot_x=False,rot_y=False,rot_z=False,rotaciones=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
     global unir
     global expandir
     global contenedores
@@ -393,11 +395,24 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
         elif (rot_y and rot_z and not rot_x) or (rot_x and rot_y and not rot_z):r=4
         elif rot_x and rot_z and not rot_y:r=5
         
+        lista_ord=[]
+
         caja_rotada=cajas[i].rot[r]
         # ------ Fist Fit en los contenedores ------
         for c in range(0,len(contenedores)):
-            if metodo=="best fit":
-                lista_ord=bestFit(caja_rotada,c)
+            if metodo=="best fit" and rotaciones:
+                if rotaciones:
+                    for r in range(6):
+                        lista=bestFit(cajas[i].rot[r])
+                        for ii in lista:
+                            lista_ord.append(ii)
+                else:
+                    lista=bestFit(caja_rotada,c)
+                
+                logger.debug('Lista de espacios: %s',lista_ord)
+                lista_ord.sort(key=lambda x: x[3],reverse=True)
+                logger.debug('Lista ordenada: %s',lista_ord)
+
             elif metodo=="worst fit":
                 lista_ord=worstFit(caja_rotada,c)
             else:
@@ -405,14 +420,16 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
             if len(lista_ord)>0:
                 cupo=True
                 break
-
+        
+        caja_rotada=cajas[i].rot[lista_ord[0][2]]
+        
         if cupo==False:
             x2= Contenedor.dimensiones[0]
             y2= Contenedor.dimensiones[1]
             z2= Contenedor.dimensiones[2]
             contenedores.append(Contenedor(c+1))
             contenedores[c+1].espacios.append(Espmax(0,x2,0,y2,0,z2))
-            lista_ord=[[0,0]]
+            lista_ord=[tuple(0,caja_rotada.num,caja_rotada.num_rot,0)]
             c=c+1
             del x2,y2,z2
 
@@ -454,4 +471,4 @@ def reiniciar():
         contenedores[c].cajas=[]
         contenedores[c].espacios=[]
 
-# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True,modo_demo=True,viz=True)
+bin_packing("best fit",instancia='WithOutRotation_5_0.txt',rotaciones=True,num_cajas=2,rot_x=True,rot_y=False,rot_z=True,unir_esp=True,expandir_esp=True,modo_demo=True,viz=True)

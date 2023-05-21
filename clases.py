@@ -35,20 +35,20 @@ class Caja:
             # self.posx=self.posx+self.dx-self.dz
         #TODO mejorar
         if numero==0:
-            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,0,'zz'))
         else:
             #  original:
-            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'zz'))
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,0,'zz'))
             #  rot=='y':
-            self.rot.append(caja_rot(self.num,dz,dy,dx,self.posx,self.posy,self.posz,'y'))
+            self.rot.append(caja_rot(self.num,dz,dy,dx,self.posx,self.posy,self.posz,1,'y'))
             #  rot=='x':
-            self.rot.append(caja_rot(self.num,dx,dz,dy,self.posx,self.posy,self.posz,'x'))
+            self.rot.append(caja_rot(self.num,dx,dz,dy,self.posx,self.posy,self.posz,2,'x'))
             #  rot=='z':
-            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,'z'))
+            self.rot.append(caja_rot(self.num,dx,dy,dz,self.posx,self.posy,self.posz,3,'z'))
             #  rot=='yz':
-            self.rot.append(caja_rot(self.num,dy,dz,dx,self.posx,self.posy,self.posz,'yz'))
+            self.rot.append(caja_rot(self.num,dy,dz,dx,self.posx,self.posy,self.posz,4,'yz'))
             #  rot=='xz':
-            self.rot.append(caja_rot(self.num,dz,dx,dy,self.posx,self.posy,self.posz,'xz'))
+            self.rot.append(caja_rot(self.num,dz,dx,dy,self.posx,self.posy,self.posz,5,'xz'))
             
         
     def print_rotaciones(self):
@@ -77,9 +77,15 @@ class Caja:
         return cls(num, dx, dy, dz,posx,posy,posz)
 
 class caja_rot(Caja):
-    def __init__(self, num, dx, dy, dz,posx,posy,posz,rot=None):
+    def __init__(self, num, dx, dy, dz,posx,posy,posz,rot=0,rot_codigo=None):
         super().__init__(num, dx, dy, dz,posx,posy,posz)
-        self.rot=rot
+        self.num_rot=rot
+        self.rot_codigo=rot_codigo
+
+    def __str__(self) -> str:
+        return "num:{},num_rot:{},rot:{},dx:{},dy:{},dz:{},posx:{},posy:{},posz:{}".format(
+            self.num,self.num_rot,self.rot_codigo,self.dx,self.dy,self.dz,self.posx,self.posy,self.posz)
+
 
 
 class Contenedor:
