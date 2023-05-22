@@ -9,6 +9,7 @@ import logging
 import pandas as pd
 
 # Solo poner en DEBUG si son muy pocas instancias!!!
+# logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.DEBUG)
 logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.INFO)
 
 #-------------------------------------------------------
@@ -268,11 +269,15 @@ for data_set in archivos_agrupados:
     resultados['avg util prom'].append(avg_util)
     resultados['tiempo'].append(tiempo)
 
-# pr=bin_packing("best fit",instancia='IV33_100_100_100_1000.txt',all_rotaciones=True,p_occup=True)
+# ------------ DEBUG --------------------
+# pr=bin_packing("best fit",instancia='I15_30_30_30_1000.txt',all_rotaciones=True,p_occup=True)
 # # viz_paso_a_paso(False)
 # print(pr)
 # # # print(archivos_agrupados)
-# print(resultados)
 
-df = pd.DataFrame(data=resultados)
-print(df)
+
+try:
+    df = pd.DataFrame(data=resultados)
+    print(df)
+except:
+    print(resultados)

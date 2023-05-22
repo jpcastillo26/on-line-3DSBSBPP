@@ -107,7 +107,7 @@ def unir_esp(cont=0):
                             logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             if i>j: i-=1
-                            j -=1
+                            if j!=0: j-=1
                             nuevos_esp.append(Espmax(ei.x1,ei.x2,min(ej.y1,ei.y1),max(ej.y2,ei.y2),ei.z1,ei.z2))
                             resp, seguir_uniendo=True,True
                             continue
@@ -119,7 +119,7 @@ def unir_esp(cont=0):
                             logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
                             if i>j: i-=1
-                            j -=1
+                            if j!=0: j-=1
                             nuevos_esp.append(Espmax(min(ej.x1,ei.x1),max(ej.x2,ei.x2),ei.y1,ei.y2,ei.z1,ei.z2))
                             resp, seguir_uniendo=True,True
                             continue
