@@ -1,6 +1,4 @@
-# import numpy as np
-# # import random
-# import pandas as pd
+import numpy as np
 from plots import *
 from clases import *
 from pathlib import Path
@@ -94,9 +92,10 @@ def unir_esp(cont=0):
         i=0
         while i < len(contenedores[cont].espacios):
             resp=False
-            ei=contenedores[cont].espacios[i]
+            # ei=contenedores[cont].espacios[i]
             j=0
             while j < len(contenedores[cont].espacios):
+                ei=contenedores[cont].espacios[i]
                 ej=contenedores[cont].espacios[j]
 
                 #TODO contenedores[cont].espacios en dos dim
@@ -107,9 +106,11 @@ def unir_esp(cont=0):
                         if not (ej.y2<ei.y1 or ej.y1>ei.y2):
                             logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
-                            j = j-1
+                            if i>j: i-=1
+                            j -=1
                             nuevos_esp.append(Espmax(ei.x1,ei.x2,min(ej.y1,ei.y1),max(ej.y2,ei.y2),ei.z1,ei.z2))
                             resp, seguir_uniendo=True,True
+                            continue
 
                     # Unir contenedores[cont].espacios con Y iguales y X diferentes
                     elif ej.y1==ei.y1 and ej.y2==ei.y2 and unir:
@@ -117,9 +118,11 @@ def unir_esp(cont=0):
                         if not (ej.x2<ei.x1 or ej.x1>ei.x2):
                             logger.debug('Match: %s, %s',ej,ei)
                             del contenedores[cont].espacios[j]
-                            j = j-1
+                            if i>j: i-=1
+                            j -=1
                             nuevos_esp.append(Espmax(min(ej.x1,ei.x1),max(ej.x2,ei.x2),ei.y1,ei.y2,ei.z1,ei.z2))
                             resp, seguir_uniendo=True,True
+                            continue
 
                     # expandir ej con ei
                     elif ei.x1 <= ej.x1 and ei.x2 >= ej.x2 and expandir:
@@ -185,25 +188,6 @@ def caja_cabe_en_esp(caja_sel,esp):
     else:
         return False
     
-# def distancia_borde_espacio(caja_sel,esp,esq):
-#     # print('Espacio:',j,'Esquina:',num_esq,'->',fc)
-#     if num_esq==1:
-#         esp
-
-#         ponerCaja(cajas[i],fc.x-cajas[i].dx,fc.y,fc.z)
-#     elif num_esq==2:
-#         ponerCaja(cajas[i],fc.x,fc.y-cajas[i].dy,fc.z)
-#     elif num_esq==3:
-#         ponerCaja(cajas[i],fc.x-cajas[i].dx,fc.y-cajas[i].dy,fc.z)
-#     else:
-#     #Si la mejor esquina esta a la derecha la caja se pondra fuera del cont
-#         ponerCaja(cajas[i],fc.x,fc.y,fc.z)
-#     pass
-
-# print('cajas esperadas:' + str(caja.num_cajas[0]))
-# print('cajas creadas:' + str(caja.num_cajas_act))
-# # print(caja.seq)
-# print('dimensiones contenedor:' + str(Espmax.dim0))
 
 def ponerCaja(caja_sel,x,y,z,cont=0):
     global contenedores
@@ -272,33 +256,29 @@ def first_corner(esp):
 
 def worstFit(caja_sel,cont=0):
     diff=[]
-    #TODO que pasa si no hay nigun espacio
-    for i in range(0,len(contenedores[cont].espacios)):
+    for i in range(len(contenedores[cont].espacios)):
         ei=contenedores[cont].espacios[i]
         if caja_cabe_en_esp(caja_sel,ei):
             diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx))))
 
-    logger.debug('Lista de espacios: %s',diff)
+    if diff: logger.debug('Lista de espacios: %s',diff)
     # diff.sort(key=lambda x: x[1],reverse=True)
     # logger.debug('Lista ordenada: %s',diff)s
 
-    # abs(esp.dx-caja_sel)
     return diff
 
 def bestFit(caja_sel,cont=0):
     diff=[]
-    #TODO que pasa si no hay nigun espacio
-    for i in range(0,len(contenedores[cont].espacios)):
+    for i in range(len(contenedores[cont].espacios)):
         ei=contenedores[cont].espacios[i]
         if caja_cabe_en_esp(caja_sel,ei):
             # espacio, numero de caja, num de rotacion, distancia a los bordes
             diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx))))
 
-    logger.debug('Lista de espacios: %s',diff)
+    if diff: logger.debug('Lista de espacios: %s',diff)
     # diff.sort(key=lambda x: x[1],reverse=False)
     # logger.debug('Lista ordenada: %s',diff)
 
-    # abs(esp.dx-caja_sel)
     return diff
 
 # Es el mismo metodo que esta en plot, este solo esta para compatibilidad o pruebas pero no se nesecita
@@ -346,8 +326,25 @@ def viz_paso_a_paso(paso=True,contenedor=None,multicolor=False,ejes_iguales=Fals
                 else:
                     plotear3D(demo,Contenedor.dimensiones[0],Contenedor.dimensiones[1],Contenedor.dimensiones[2],multicolor,ejes_iguales)
 
+
+def porcentaje_ocupacion(contenedores):
+    xs,ys,zs=[],[],[]
+    for cont in contenedores:
+        for caja_sel in cont.cajas:
+            xs.append(caja_sel.dx)
+            ys.append(caja_sel.dy)
+            zs.append(caja_sel.dz)
+    np_xs=np.array(xs)
+    np_ys=np.array(ys)
+    np_zs=np.array(zs)
+    D = np.random.random((5, 333))
+    occup=(np_xs*np_ys).dot(np_zs)
+    total=len(contenedores)*Contenedor.dimensiones[0]*Contenedor.dimensiones[1]*Contenedor.dimensiones[2]
+    return occup/total
+
+
 # La condicion all_rotaciones anula las demas rotaciones
-def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,all_rotaciones=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False):
+def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=False,all_rotaciones=False,unir_esp=True,expandir_esp=True,modo_demo=False,viz=False,p_occup=False):
     global unir
     global expandir
     global contenedores
@@ -393,29 +390,30 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
                 rango_sup=1
 
             if metodo=="best fit":
-                for r in range(rango_inf,rango_sup):
+                for j in range(rango_inf,rango_sup):
 
-                    lista=bestFit(cajas[i].rot[r],c)
+                    lista=bestFit(cajas[i].rot[j],c)
 
                     for ii in lista:
                         lista_ord.append(ii)
    
-                logger.debug('Lista de espacios: %s',lista_ord)
-                lista_ord.sort(key=lambda x: x[3],reverse=False)
-                logger.debug('Lista ordenada: %s',lista_ord)
+                if lista_ord:
+                    logger.debug('Lista de espacios: %s',lista_ord)
+                    lista_ord.sort(key=lambda x: x[3],reverse=False)
+                    logger.debug('Lista ordenada: %s',lista_ord)
 
             elif metodo=="worst fit":
-                for r in range(rango_inf,rango_sup):
+                for j in range(rango_inf,rango_sup):
 
-                    lista=worstFit(cajas[i].rot[r],c)
+                    lista=worstFit(cajas[i].rot[j],c)
 
                     for ii in lista:
                         lista_ord.append(ii)
 
-                
-                logger.debug('Lista de espacios: %s',lista_ord)
-                lista_ord.sort(key=lambda x: x[3],reverse=True)
-                logger.debug('Lista ordenada: %s',lista_ord)
+                if lista_ord: 
+                    logger.debug('Lista de espacios: %s',lista_ord)
+                    lista_ord.sort(key=lambda x: x[3],reverse=True)
+                    logger.debug('Lista ordenada: %s',lista_ord)
 
             else:
                 raise ValueError("El metodo seleccionado no es correcto")
@@ -465,14 +463,11 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
         
     if viz:
         visualizar(contenedores,ejes_iguales=True)
-    # print("\n")         
-    return len(contenedores)
+    # print("\n") 
+    if p_occup:
+        p_occupacion=porcentaje_ocupacion(contenedores)
+    else: p_occupacion=0
+    
+    return len(contenedores),p_occupacion
 
-
-# cargarArchivo('WithOutRotation_5_0.txt')
-def reiniciar():
-    for c in range(0,len(contenedores)):
-        contenedores[c].cajas=[]
-        contenedores[c].espacios=[]
-
-# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',all_rotaciones=True,num_cajas=400,rot_x=True,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=True,viz=True)
+# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',all_rotaciones=True,num_cajas=400,rot_x=True,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=True,viz=False,p_occup=True)

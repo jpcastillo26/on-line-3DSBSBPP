@@ -6,6 +6,7 @@ import os
 from time import perf_counter
 from statistics import mean
 import logging
+import pandas as pd
 
 # Solo poner en DEBUG si son muy pocas instancias!!!
 logging.basicConfig(filename="sbsbpp.log",filemode='w', level=logging.INFO)
@@ -225,31 +226,53 @@ del tipo_IV_40
 del tipo_IV_1000
 del dir_path, tipo, res, N_items
 
+categorias=['tipo_I_20',
+            'tipo_I_40',
+            'tipo_I_60',
+            'tipo_I_80',
+            'tipo_I_1000',
+            'tipo_II_20',
+            'tipo_II_40',
+            'tipo_II_60',
+            'tipo_II_80',
+            'tipo_II_1000',
+            'tipo_III_20',
+            'tipo_III_40',
+            'tipo_III_60',
+            'tipo_III_80',
+            'tipo_III_1000',
+            'tipo_IV_40',
+            'tipo_IV_1000']
 
 
 
-
-resultados={'avg num contenedores':[],'tiempo':[]}
+resultados={'categoria':categorias,'avg num contenedores':[],'tiempo':[],'avg util prom':[]}
 for data_set in archivos_agrupados:
     num_contenedores=[]
+    util_prom=[]
     t1_start = perf_counter()
 
     for archivo_instancia in data_set:
         #cambiar metodo para obtener resultados
-        num_contenedores.append(bin_packing("worst fit",instancia=archivo_instancia,all_rotaciones=False))
+        res=bin_packing("best fit",instancia=archivo_instancia,all_rotaciones=False,p_occup=True)
+        num_contenedores.append(res[0])
+        util_prom.append(res[1])
 
     t1_stop = perf_counter()
     tiempo=t1_stop-t1_start
     print("Tiempo de procesamiento:",tiempo)
 
-    avg=mean(num_contenedores)
-
-    resultados['avg num contenedores'].append(avg)
+    avg_cont=mean(num_contenedores)
+    avg_util=mean(util_prom)
+    resultados['avg num contenedores'].append(avg_cont)
+    resultados['avg util prom'].append(avg_util)
     resultados['tiempo'].append(tiempo)
 
-# pr=bin_packing("best fit",instancia='I1_30_30_30_1000.txt')
-# viz_paso_a_paso(False)
+# pr=bin_packing("best fit",instancia='IV33_100_100_100_1000.txt',all_rotaciones=True,p_occup=True)
+# # viz_paso_a_paso(False)
 # print(pr)
-# # print(archivos_agrupados)
-print(resultados)
+# # # print(archivos_agrupados)
+# print(resultados)
 
+df = pd.DataFrame(data=resultados)
+print(df)
