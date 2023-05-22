@@ -259,7 +259,7 @@ def worstFit(caja_sel,cont=0):
     for i in range(len(contenedores[cont].espacios)):
         ei=contenedores[cont].espacios[i]
         if caja_cabe_en_esp(caja_sel,ei):
-            diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx))))
+            diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,ei.vol-caja_sel.vol)))
 
     if diff: logger.debug('Lista de espacios: %s',diff)
     # diff.sort(key=lambda x: x[1],reverse=True)
@@ -273,7 +273,7 @@ def bestFit(caja_sel,cont=0):
         ei=contenedores[cont].espacios[i]
         if caja_cabe_en_esp(caja_sel,ei):
             # espacio, numero de caja, num de rotacion, distancia a los bordes
-            diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,abs(caja_sel.dy-ei.dy)+abs(caja_sel.dx-ei.dx))))
+            diff.append(tuple((i,caja_sel.num,caja_sel.num_rot,ei.vol-caja_sel.vol)))
 
     if diff: logger.debug('Lista de espacios: %s',diff)
     # diff.sort(key=lambda x: x[1],reverse=False)
@@ -470,4 +470,4 @@ def bin_packing(metodo,instancia,num_cajas=None,rot_x=False,rot_y=False,rot_z=Fa
     
     return len(contenedores),p_occupacion
 
-# bin_packing("best fit",instancia='WithOutRotation_5_0.txt',all_rotaciones=True,num_cajas=400,rot_x=True,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=True,viz=False,p_occup=True)
+# bin_packing("worst fit",instancia='WithOutRotation_5_0.txt',all_rotaciones=True,num_cajas=400,rot_x=True,rot_y=True,rot_z=False,unir_esp=True,expandir_esp=True,modo_demo=True,viz=True,p_occup=True)

@@ -7,7 +7,7 @@ class Caja:
         self.dx = dx
         self.dy = dy
         self.dz = dz
-        # self.seq = seq
+        self.vol = dx*dy*dz
 
         #temp
         self.posx = posx
@@ -125,7 +125,7 @@ class Espmax:
         self.y2 = y2
         self.z1 = z1
         self.z2 = z2
-    
+        
         # self.hijos = []
         self.esquinas=[Esquina(1,x1,y1,z1),Esquina(2,x2,y1,z1),Esquina(3,x1,y2,z1),Esquina(4,x2,y2,z1)]
         # self.esq2=Esquina(x2,y1)
@@ -155,7 +155,9 @@ class Espmax:
     def dz(self):
         return self.z2-self.z1
     
-    
+    @property
+    def vol(self):
+        return (self.x2-self.x1)*(self.y2-self.y1)*(self.z2-self.z1)
 
     # def crear_hijo(self,otro):
     #     self.hijos.append(otro)

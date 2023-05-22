@@ -246,28 +246,34 @@ categorias=['tipo_I_20',
             'tipo_IV_1000']
 
 
+def correr_instancias(metodo,rot=False,porcentaje_ocupacion=True):
+    resultados={'categoria':categorias,'avg num contenedores':[],'tiempo':[],'avg util prom':[]}
+    for data_set in archivos_agrupados:
+        num_contenedores=[]
+        util_prom=[]
+        t1_start = perf_counter()
 
-resultados={'categoria':categorias,'avg num contenedores':[],'tiempo':[],'avg util prom':[]}
-for data_set in archivos_agrupados:
-    num_contenedores=[]
-    util_prom=[]
-    t1_start = perf_counter()
+        for archivo_instancia in data_set:
+            #cambiar metodo para obtener resultados
+            res=bin_packing(metodo,instancia=archivo_instancia,all_rotaciones=rot,p_occup=porcentaje_ocupacion)
+            num_contenedores.append(res[0])
+            util_prom.append(res[1])
 
-    for archivo_instancia in data_set:
-        #cambiar metodo para obtener resultados
-        res=bin_packing("best fit",instancia=archivo_instancia,all_rotaciones=False,p_occup=True)
-        num_contenedores.append(res[0])
-        util_prom.append(res[1])
+        t1_stop = perf_counter()
+        tiempo=t1_stop-t1_start
+        print("Tiempo de procesamiento:",tiempo)
 
-    t1_stop = perf_counter()
-    tiempo=t1_stop-t1_start
-    print("Tiempo de procesamiento:",tiempo)
+        avg_cont=mean(num_contenedores)
+        avg_util=mean(util_prom)
+        resultados['avg num contenedores'].append(avg_cont)
+        resultados['avg util prom'].append(avg_util)
+        resultados['tiempo'].append(tiempo)
 
-    avg_cont=mean(num_contenedores)
-    avg_util=mean(util_prom)
-    resultados['avg num contenedores'].append(avg_cont)
-    resultados['avg util prom'].append(avg_util)
-    resultados['tiempo'].append(tiempo)
+    try:
+        df = pd.DataFrame(data=resultados)
+        print(df)
+    except:
+        print(resultados)
 
 # ------------ DEBUG --------------------
 # pr=bin_packing("best fit",instancia='I15_30_30_30_1000.txt',all_rotaciones=True,p_occup=True)
@@ -276,8 +282,10 @@ for data_set in archivos_agrupados:
 # # # print(archivos_agrupados)
 
 
-try:
-    df = pd.DataFrame(data=resultados)
-    print(df)
-except:
-    print(resultados)
+
+
+correr_instancias("best fit",rot=False,porcentaje_ocupacion=True)
+correr_instancias("best fit",rot=True,porcentaje_ocupacion=True)
+correr_instancias("worst fit",rot=False,porcentaje_ocupacion=True)
+correr_instancias("worst fit",rot=True,porcentaje_ocupacion=True)
+
